@@ -7,13 +7,18 @@ require_relative '../utils/discover_os'
 module CodeCode
   module Models
     module Base
-
       # Database constants belong to this module namespace:
+
       private
+
       def self.load_config_file
         file = 'database.conf.yml'
         file_path = File.dirname(__FILE__) + "/../config/#{file}"
-        YAML::load(File.open(file_path)) rescue fail "[Startup Info] - Arquivo de configuração [#{file}] não encontrado no diretório [#{file_path}]"
+        begin
+          YAML.safe_load(File.open(file_path))
+        rescue
+          raise "[Startup Info] - Arquivo de configuração [#{file}] não encontrado no diretório [#{file_path}]"
+        end
       end
 
       def self.load_db
@@ -53,7 +58,7 @@ module CodeCode
         end
 
         def to_hash
-          {status: @status, message: @message, code: @code, data: @data}
+          { status: @status, message: @message, code: @code, data: @data }
         end
 
         def to_response
