@@ -1,0 +1,2 @@
+# ruby_dinamic_class_creator
+Ruby MetaProgramming
