@@ -43,7 +43,7 @@ class App < Sinatra::Base
   get('/hello/') {redirect '/hello'}
 
   get('/tables') {
-    { classes: Classes }.to_json
+    { tables: Classes }.to_json
   }
 
   run!
