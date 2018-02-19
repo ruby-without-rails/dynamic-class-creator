@@ -13,13 +13,15 @@ module CodeCode
 
       # --EXIBINDO AS COLUNAS DE UMA TABELA:
       # SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '?';
-      SHOW_COLUMNS = "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '?';".freeze
+      SHOW_COLUMNS = "SELECT column_name, data_type, is_nullable, column_default FROM information_schema.columns WHERE table_name = '?';".freeze
 
       def create_classes(connection, module_constant)
         table_info = scan_classes(connection)
         table_info.each do |t|
+          table_fields = scan_fields(connection, t[:table])
           table_name = t[:table]
           table_schema = t[:schema]
+          table_fields = table_fields.group_by{|t| t[:column_name]}
 
 
           dynamic_name = snake_case_to_camel_case_name(table_name)
@@ -37,6 +39,7 @@ module CodeCode
               @table_schema = table_schema
               @fast_instance_delete_sql = ''
               @fast_pk_lookup_sql = ''
+              @field_map = table_fields
 
 
               set_dataset(connection[table_name.to_sym])
@@ -61,6 +64,11 @@ module CodeCode
 
       def scan_classes(connection)
         ConnectionFactory.executar_query_sql(connection, SHOW_TABLES, false)
+      end
+
+      def scan_fields(connection, table_name)
+        query = SHOW_COLUMNS.gsub("?", table_name)
+        ConnectionFactory.executar_query_sql(connection, query, false)
       end
 
       private
