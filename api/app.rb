@@ -12,7 +12,6 @@ require_relative '../lib/utils/class_factory'
 # @class App
 class App < Sinatra::Base
   register Sinatra::SequelExtension
-  include CodeCode::Exception
   extend CodeCode::Utils::ClassFactory
 
   DB = CodeCode::Models::Base::DB
@@ -28,7 +27,6 @@ class App < Sinatra::Base
 
     set :raise_errors, true
     set :show_exceptions, true
-
   }
 
   before {
@@ -38,9 +36,7 @@ class App < Sinatra::Base
 
   get('/') {{msg: 'Welcome To Dynamic Ruby Class Creator'}.to_json}
 
-  get('/tables') {
-    { tables: Classes }.to_json
-  }
+  get('/tables') {{tables: Classes}.to_json}
 
   run!
 end
