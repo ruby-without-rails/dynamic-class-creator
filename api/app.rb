@@ -38,10 +38,6 @@ class App < Sinatra::Base
 
   get('/') {{msg: 'Welcome To Dynamic Ruby Class Creator'}.to_json}
 
-  get('/hello') {'Hello Guest'}
-
-  get('/hello/') {redirect '/hello'}
-
   get('/tables') {
     { tables: Classes }.to_json
   }
