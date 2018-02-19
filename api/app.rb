@@ -3,6 +3,7 @@ require 'sinatra/sequel'
 require 'json'
 
 require_relative '../lib/exceptions/unexpected_param_exception'
+require_relative '../lib/../lib/models/base'
 
 # @class App
 class App < Sinatra::Base
@@ -10,9 +11,6 @@ class App < Sinatra::Base
   include CodeCode::Exception
 
   configure {
-
-    set :database_postgresql, 'postgresql://postgres:postgres@localhost/kuadro_dev'
-
     set :environment, :development
     set :bind, '0.0.0.0'
     set :port, 9494
@@ -20,7 +18,7 @@ class App < Sinatra::Base
     set :raise_errors, true
     set :show_exceptions, true
 
-    DB = Sequel.connect(settings.database_postgresql, search_path: ['public'])
+    DB = CodeCode::Models::Base::DB
   }
 
   before {
