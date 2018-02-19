@@ -13,12 +13,15 @@ require_relative '../lib/utils/class_factory'
 class App < Sinatra::Base
   register Sinatra::SequelExtension
   extend CodeCode::Utils::ClassFactory
+  include CodeCode::Utils::ClassFactory
 
   DB = CodeCode::Models::Base::DB
 
   Dynamics = Module.new
 
-  Classes = create_classes(DB, Dynamics)
+  ClassMap = create_classes(DB, Dynamics)
+
+  Classes = get_classes(Dynamics)
 
   configure {
     set :environment, :development
@@ -36,7 +39,18 @@ class App < Sinatra::Base
 
   get('/') {{msg: 'Welcome To Dynamic Ruby Class Creator'}.to_json}
 
-  get('/tables') {{tables: Classes}.to_json}
+  get('/tables') {{tables: ClassMap}.to_json}
+
+  get('/table/:table_name/:id'){|table_name, id|
+    mapped_class = ClassMap.detect{|map| map[:table_name] == table_name}
+    raise ModelException.new "Mapped class not found for name: #{table_name}" unless mapped_class
+
+    the_class = class_from_string(mapped_class[:class_name])
+    raise ModelException.new "Class not found for name: #{mapped_class[:class_name]}" unless the_class
+
+    object = the_class.obter_por_id(id)&.values
+    {"#{mapped_class[:table]}": object}.to_json
+  }
 
   run!
 end

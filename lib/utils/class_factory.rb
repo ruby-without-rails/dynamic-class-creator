@@ -9,24 +9,30 @@ module CodeCode
       # --EXIBINDO AS TABELAS DO BANCOS DE DADOS:
       # SELECT table_schema as schema, table_name as table FROM information_schema.tables
       # WHERE table_schema NOT IN ('pg_catalog', 'information_schema') ORDER BY table_schema;
-      SHOW_TABLES = "SELECT table_schema as schema, table_name as table FROM information_schema.tables WHERE table_schema NOT IN ('pg_catalog', 'information_schema') ORDER BY table_schema;".freeze
+      SHOW_TABLES = "SELECT table_schema as schema, table_name FROM information_schema.tables WHERE table_schema NOT IN ('pg_catalog', 'information_schema') ORDER BY table_schema;".freeze
 
       # --EXIBINDO AS COLUNAS DE UMA TABELA:
       # SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '?';
       SHOW_COLUMNS = "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '?';".freeze
 
+      def class_from_string(str)
+        str.split('::').inject(Object) do |mod, class_name|
+          mod.const_get(class_name)
+        end
+      end
+
       def create_classes(connection, module_constant)
         table_info = scan_classes(connection)
         table_info.each do |t|
-          table_name = t[:table]
-          table_schema = t[:schema]
 
+          table_name = t[:table_name]
+          table_schema = t[:schema]
 
           dynamic_name = snake_case_to_camel_case_name(table_name)
           classes = []
 
           begin
-            Object.const_set(dynamic_name, Class.new(BaseModel){|klass|
+            Object.const_set(dynamic_name, Class.new(BaseModel) {|klass|
               @db = connection
               @require_valid_table = false
               @primary_key = nil
@@ -42,15 +48,17 @@ module CodeCode
               set_dataset(connection[table_name.to_sym])
 
               class << self
-                define_method('find_by_id'){ |value| self[value] }
+                define_method('find_by_id') {|value| self[value]}
                 alias_method :obter_por_id, :find_by_id
               end
 
               module_constant.const_set(dynamic_name, klass)
 
               classes << klass
+
+              t[:class_name] = klass.name
+              puts t[:class_name]
             })
-            classes.each{|klass| p "#{klass.name}" }
           ensure
             connection.disconnect
           end
@@ -59,13 +67,17 @@ module CodeCode
         end
       end
 
+      def get_classes(module_instance)
+        module_instance.constants.select {|c| module_instance.const_get(c).is_a? Class}
+      end
+
       def scan_classes(connection)
         ConnectionFactory.executar_query_sql(connection, SHOW_TABLES, false)
       end
 
       private
       def snake_case_to_camel_case_name(string)
-        string = string.tr('_', ' ').split.map.with_index { |x, i| i.zero? ? x : x.capitalize }.join
+        string = string.tr('_', ' ').split.map.with_index {|x, i| i.zero? ? x : x.capitalize}.join
         string[0] = string[0].upcase
         string
       end

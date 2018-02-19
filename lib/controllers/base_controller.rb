@@ -1,7 +1,5 @@
 require 'singleton'
 require 'codecode/common/utils'
-require_relative '../../lib/models/code_language'
-require_relative '../../lib/models/project'
 
 
 module CodeCode
