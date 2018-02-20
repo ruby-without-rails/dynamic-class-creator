@@ -15,6 +15,11 @@ module CodeCode
       # SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '?';
       SHOW_COLUMNS = "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '?';".freeze
 
+      # --EXIBINDO AS CONTRAINTS DAS TABELAS:
+      # select table_name, constraint_type, constraint_name
+      # from information_schema.table_constraints where constraint_type in ('PRIMARY KEY', 'FOREIGN KEY') order by table_name, constraint_type;
+      SHOW_CONSTRAINTS = "select table_name, constraint_type, constraint_name from information_schema.table_constraints where constraint_type in ('PRIMARY KEY', 'FOREIGN KEY') and table_name = '?' order by table_name, constraint_type;"
+
       def class_from_string(str)
         str.split('::').inject(Object) do |mod, class_name|
           mod.const_get(class_name)
