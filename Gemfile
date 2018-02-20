@@ -5,7 +5,7 @@
 require_relative 'lib/utils/discover_os'
 
 source 'http://rubygems.org'
-ruby '>= 1.9'
+ruby '>= 2.1'
 
 gem 'codecode-common-utils', '~> 0.1.3'
 
