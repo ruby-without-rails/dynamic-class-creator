@@ -67,6 +67,15 @@ class App < Sinatra::Base
 
     object = the_class.obter_por_id(id)&.values
     {"#{mapped_class[:table_name]}": object}.to_json
+  }
+
+  post('') {
+    mapped_class = ClassMap.detect {|map| map[:table_name] == table_name}
+    raise ModelException.new "Mapped class not found for name: #{table_name}" unless mapped_class
+
+    the_class = class_from_string(mapped_class[:class_name])
+    raise ModelException.new "Class not found for name: #{mapped_class[:class_name]}" unless the_class
+
 
   }
 
