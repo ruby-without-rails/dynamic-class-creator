@@ -37,12 +37,29 @@ class App < Sinatra::Base
     content_type :json, 'charset' => 'utf-8'
   }
 
-  get('/') {{msg: 'Welcome To Dynamic Ruby Class Creator'}.to_json}
+  after {
+
+  }
+
+
+  get('/') {{msg: 'Welcome To Dynamic Ruby Class Creator'}}
 
   get('/tables') {{tables: ClassMap}.to_json}
 
-  get('/table/:table_name/:id'){|table_name, id|
-    mapped_class = ClassMap.detect{|map| map[:table_name] == table_name}
+  get('/table/:table_name') {|table_name|
+    mapped_class = ClassMap.detect {|map| map[:table_name] == table_name}
+    raise ModelException.new "Mapped class not found for name: #{table_name}" unless mapped_class
+
+    the_class = class_from_string(mapped_class[:class_name])
+    raise ModelException.new "Class not found for name: #{mapped_class[:class_name]}" unless the_class
+
+    object = the_class.all.map(&:values)
+    {"#{mapped_class[:table_name]}'s": object}.to_json
+  }
+
+  get('/table/:table_name/:id') {|table_name, id|
+
+    mapped_class = ClassMap.detect {|map| map[:table_name] == table_name}
     raise ModelException.new "Mapped class not found for name: #{table_name}" unless mapped_class
 
     the_class = class_from_string(mapped_class[:class_name])
@@ -50,6 +67,7 @@ class App < Sinatra::Base
 
     object = the_class.obter_por_id(id)&.values
     {"#{mapped_class[:table]}": object}.to_json
+
   }
 
   run!
