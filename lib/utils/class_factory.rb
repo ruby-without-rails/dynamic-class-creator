@@ -40,7 +40,7 @@ module CodeCode
 
           table_constraints = get_table_constraints(connection, table_name)
           t[:table_constraints] = table_constraints.map{|tc| {type: tc[:constraint_type], name: tc[:constraint_name]}}
-          primary_key_name = t[:table_constraints].detect{|tc| tc[:constraint_type].eql?('PRIMARY KEY')}
+          primary_key_name = t[:table_constraints].detect{|tc| tc[:type].eql?('PRIMARY KEY')}
 
           dynamic_name = snake_case_to_camel_case_name(table_name)
           classes = []
