@@ -44,16 +44,16 @@ describe 'Dynamic Class Creator' do
   end
 
   it 'deve realizar a conexao e criar as classes' do
-    result = ConnectionFactory.testar_conexao(yaml)
+    result = ConnectionFactory.test_connection(yaml)
     expect(result).not_to be_nil
 
     schemas = result[:schemas]
 
-    ConnectionFactory.fechar_conexao(conn)
+    ConnectionFactory.close_connection(conn)
 
     yaml[:schemas] = schemas
 
-    conn = ConnectionFactory.criar_conexao(yaml)
+    conn = ConnectionFactory.create_connection(yaml)
 
     table_info = scan_classes(conn)
     expect(table_info).not_to be_nil
@@ -64,6 +64,6 @@ describe 'Dynamic Class Creator' do
     classes = create_classes(conn, Dynamics)
     expect(classes.size).to eq(result[:tabelas].size)
 
-    ConnectionFactory.fechar_conexao(conn)
+    ConnectionFactory.close_connection(conn)
   end
 end

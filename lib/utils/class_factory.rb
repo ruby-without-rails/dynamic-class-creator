@@ -25,7 +25,7 @@ module Utils
 
     def get_table_constraints(connection, table_name)
       query = SHOW_CONSTRAINTS
-      ConnectionFactory.executar_query_sql(connection, query.gsub('?', table_name), false)
+      ConnectionFactory.execute_query(connection, query.gsub('?', table_name), false)
     end
 
     def create_classes(connection, module_constant)
@@ -83,7 +83,7 @@ module Utils
     end
 
     def scan_classes(connection)
-      ConnectionFactory.executar_query_sql(connection, SHOW_TABLES, false)
+      ConnectionFactory.execute_query(connection, SHOW_TABLES, false)
     end
 
     private

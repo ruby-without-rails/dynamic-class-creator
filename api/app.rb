@@ -40,6 +40,14 @@ class App < Sinatra::Application
 
   after {}
 
+  error(500, 400) {
+    # Log uncaught errors with Sentry, sending env variables
+    # and the request body
+    extra = env
+    extra['REQUEST_BODY'] = request.body
+    puts extra
+  }
+
   options('*') {
     response.headers['Allow'] = 'GET, POST, PUT, DELETE, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token, KUADRO_AUTH_TOKEN, Kuadro-Auth-Token'
