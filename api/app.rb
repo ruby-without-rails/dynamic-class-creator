@@ -10,7 +10,6 @@ require_relative '../lib/exceptions/unexpected_param_exception'
 require_relative '../lib/controllers/base_controller'
 require_relative '../lib/controllers/mini_controller'
 
-
 # @class App
 class App < Sinatra::Application
   register Sinatra::SequelExtension
@@ -25,15 +24,27 @@ class App < Sinatra::Application
 
     set :raise_errors, true
     set :show_exceptions, true
+
+    enable :cross_origin
   }
 
   before {
     content_type :html, 'charset' => 'utf-8'
     content_type :json, 'charset' => 'utf-8'
+
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token, KUADRO_AUTH_TOKEN, Kuadro-Auth-Token'
   }
 
-  after {
+  after {}
 
+  options('*') {
+    response.headers['Allow'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token, KUADRO_AUTH_TOKEN, Kuadro-Auth-Token'
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    200
   }
 
   run!
