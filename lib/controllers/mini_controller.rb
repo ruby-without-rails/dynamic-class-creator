@@ -11,7 +11,7 @@ module Controller
 
         controller.options('/tables') {
           make_default_json_api(self) {
-            {tables: App::ClassMap}}
+            {database:DB.opts[:database], schema: App::ClassMap.first[:schema], tables: App::ClassMap}}
         }
 
         controller.get('/table/:table_name') {|table_name|
