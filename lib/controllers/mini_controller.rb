@@ -6,59 +6,39 @@ module Controller
 
         controller.get('/') {
           make_default_json_api(self) {
-            {msg: 'Welcome To Dynamic Ruby Class Creator'}}
+            {msg: 'Welcome To Dynamic Ruby Class Creator'}
+          }
         }
 
         controller.options('/tables') {
           make_default_json_api(self) {
-            {database:DB.opts[:database], schema: App::ClassMap.first[:schema], tables: App::ClassMap}}
+            {database: DB.opts[:database], schema: App::ClassMap.first[:schema], tables: App::ClassMap}
+          }
         }
 
         controller.get('/table/:table_name') {|table_name|
-          make_default_json_api(self) {
-            mapped_class = App::ClassMap.detect {|map| map[:table_name] == table_name}
-            raise ModelException.new "Mapped class not found for name: #{table_name}" unless mapped_class
+          make_default_json_api(self, {}, table_name) {|mapped_class, the_class|
 
-            the_class = class_from_string(mapped_class[:class_name])
-            raise ModelException.new "Class not found for name: #{mapped_class[:class_name]}" unless the_class
-
-            object = the_class.all.map(&:values)
-            {"#{mapped_class[:table_name]}": object}
+            {"#{mapped_class[:table_name]}": the_class.all.map(&:values)}
           }
         }
 
         controller.get('/table/:table_name/:id') {|table_name, id|
-          make_default_json_api(self) {
-            mapped_class = App::ClassMap.detect {|map| map[:table_name] == table_name}
-            raise ModelException.new "Mapped class not found for name: #{table_name}" unless mapped_class
+          make_default_json_api(self, {}, table_name) {|mapped_class, the_class|
 
-            the_class = class_from_string(mapped_class[:class_name])
-            raise ModelException.new "Class not found for name: #{mapped_class[:class_name]}" unless the_class
-
-            object = the_class.obter_por_id(id)&.values
-            {"#{mapped_class[:table_name]}": object}
+            {"#{mapped_class[:table_name]}": the_class.obter_por_id(id)&.values}
           }
         }
 
         controller.post('/table/:table_name') {|table_name|
-          make_default_json_api(self, request.body.read&.delete("\n")) {|params, _status_code|
-            mapped_class = App::ClassMap.detect {|map| map[:table_name] == table_name}
-            raise ModelException.new "Mapped class not found for name: #{table_name}" unless mapped_class
+          make_default_json_api(self, request.body.read&.delete("\n"), table_name) {|params, _status_code, _mapped_class, the_class|
 
-            the_class = class_from_string(mapped_class[:class_name])
-            raise ModelException.new "Class not found for name: #{mapped_class[:class_name]}" unless the_class
-
-            {status: _status_code, response: the_class.create(params)&.values}
+            {status: 201, response: the_class.create(params)&.values}
           }
         }
 
         controller.put('/table/:table_name/:id') {|table_name, id|
-          make_default_json_api(self, request.body.read&.delete("\n")) {|params, _status_code|
-            mapped_class = App::ClassMap.detect {|map| map[:table_name] == table_name}
-            raise ModelException.new "Mapped class not found for name: #{table_name}" unless mapped_class
-
-            the_class = class_from_string(mapped_class[:class_name])
-            raise ModelException.new "Class not found for name: #{mapped_class[:class_name]}" unless the_class
+          make_default_json_api(self, request.body.read&.delete("\n"), table_name) {|params, _status_code, _mapped_class, the_class|
 
             object = the_class[id]
             raise ModelException.new "Object not found with id: #{id}" unless object

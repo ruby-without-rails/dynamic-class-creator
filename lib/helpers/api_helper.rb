@@ -12,15 +12,25 @@ module Helpers
 
       CONTENT_TYPE = 'application/json;charset=utf-8'.freeze
 
-      def make_default_json_api(api_instance, payload = {})
+      def make_default_json_api(api_instance, payload = {}, table_name = '')
         request_method = api_instance.env['REQUEST_METHOD']
+
+        unless table_name.empty?
+          mapped_class = App::ClassMap.detect {|map| map[:table_name] == table_name}
+          raise ModelException.new "Mapped class not found for name: #{table_name}" unless mapped_class
+
+          the_class = class_from_string(mapped_class[:class_name])
+          raise ModelException.new "Class not found for name: #{mapped_class[:class_name]}" unless the_class
+        end
+
 
         if payload.empty? && (request_method.eql?('GET') || request_method.eql?('DELETE') || request_method.eql?('OPTIONS'))
 
           begin
             api_instance.content_type CONTENT_TYPE
             status = 200
-            block_given? ? response = yield : response = {msg: 'Api ainda não implementada.'}
+            my_yield = table_name.empty? || table_name.nil? ? yield : yield(mapped_class, the_class)
+            block_given? ? response = my_yield : response = {msg: 'Api ainda não implementada.'}
           rescue ModelException => e
             status = 400
             response = {error: {msg: e.message, status_code: status}}
@@ -41,7 +51,7 @@ module Helpers
             status = 200
 
             if block_given?
-              return_data = yield(body_params, status)
+              return_data = yield(body_params, status, mapped_class, the_class)
               status = return_data[:status]
               response = return_data[:response]
             else
