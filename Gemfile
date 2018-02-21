@@ -14,7 +14,7 @@ gem 'sequel' , '< 5'
 gem 'sequel_enum'
 # A gem 'sequel_pg' não funciona em ambiente Windows.
 gem 'sequel-postgres-schemata'
-gem 'sequel_pg', require: 'sequel' unless CodeCode::Utils::DiscoverOSUtil.os?.eql?(:windows)
+gem 'sequel_pg', require: 'sequel' unless Utils::DiscoverOSUtil.os?.eql?(:windows)
 
 
 gem 'pg'

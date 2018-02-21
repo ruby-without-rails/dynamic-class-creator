@@ -7,7 +7,7 @@ require 'rspec'
 
 describe 'Dynamic Class Creator' do
 
-  include CodeCode::Utils::ClassFactory
+  include Utils::ClassFactory
 
   conn = nil
 
