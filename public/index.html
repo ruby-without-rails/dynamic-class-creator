@@ -1,0 +1,99 @@
+<html lang="en" >
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/controller.js"></script>
+</head>
+<body ng-app="BlankApp" ng-cloak>
+  <!--
+    Your HTML content here
+  -->
+
+  <div ng-controller="AppCtrl" ng-cloak layout-gt-sm="row" layout="column">
+
+    <div flex-gt-sm="50" flex>
+
+      <md-toolbar layout="row" class="md-hue-3">
+        <div class="md-toolbar-tools">
+          <span>Tables from {{dbname}}</span>
+        </div>
+      </md-toolbar>
+
+      <md-content>
+        <md-list flex>
+          <md-subheader class="md-no-sticky">{{countOfTables}} in {{dbname}}</md-subheader>
+          <md-list-item class="md-3-line" ng-repeat="item in tables" ng-click="null">
+            <img ng-src="{{icon}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />
+            <div class="md-list-item-text" layout="column">
+              <h3>{{ item.table_name }}</h3>
+              <h4>{{ item.schema }}</h4>
+              <p>{{ item.class_name }}</p>
+            </div>
+          </md-list-item>
+          <md-divider ></md-divider>
+
+
+        </md-list>
+      </md-content>
+    </div>
+
+    <md-divider></md-divider>
+
+    <div flex-gt-sm="50" flex>
+
+
+    </div>
+
+  </div>
+  
+  <!-- Angular Material requires Angular.js Libraries -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+  <!-- Angular Material Library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+  
+  <!-- Your application bootstrap  -->
+  <script type="text/javascript">    
+    /**
+     * You must include the dependency on 'ngMaterial' 
+     */
+    angular.module('BlankApp', ['ngMaterial']);
+    angular.module('BlankApp')
+        .config(function($mdIconProvider) {
+            $mdIconProvider
+                .iconSet('communication', 'img/icons/sets/communication-icons.svg', 24);
+        })
+        .controller('AppCtrl', function($scope, $http) {
+            var baseUrl = 'http://localhost:9494';
+
+            $scope.icon = 'img/60.png';
+            $scope.tables = [];
+            $scope.database = "";
+            $scope.schema = "";
+
+            $http({method: 'OPTIONS', url: baseUrl + '/tables'})
+                .then(function(returnData) {
+
+                    $scope.tables = returnData.data.tables;
+                    $scope.database = returnData.data.database;
+                    $scope.schema = returnData.data.schema;
+
+                }, function (reason) {
+                    console.log(reason);
+                });
+
+        });
+  </script>
+  
+</body>
+</html>
+
+<!--
+Copyright 2016 Google Inc. All Rights Reserved. 
+Use of this source code is governed by an MIT-style license that can be in foundin the LICENSE file at https://material.angularjs.org/license.
+-->
