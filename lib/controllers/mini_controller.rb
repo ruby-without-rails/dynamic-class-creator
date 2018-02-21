@@ -51,6 +51,21 @@ module Controller
             {status: _status_code, response: the_class.create(params)&.values}
           }
         }
+
+        controller.put('/table/:table_name/:id') {|table_name, id|
+          make_default_json_api(self, request.body.read&.delete("\n")) {|params, _status_code|
+            mapped_class = App::ClassMap.detect {|map| map[:table_name] == table_name}
+            raise ModelException.new "Mapped class not found for name: #{table_name}" unless mapped_class
+
+            the_class = class_from_string(mapped_class[:class_name])
+            raise ModelException.new "Class not found for name: #{mapped_class[:class_name]}" unless the_class
+
+            object = the_class[id]
+            raise ModelException.new "Object not found with id: #{id}" unless object
+
+            {status: _status_code, response: object.update(params)&.values}
+          }
+        }
       end
     end
   end

@@ -51,8 +51,8 @@ module Helpers
             status = 400
             response = {error: {msg: e.message, status_code: status}}
           rescue ConstraintViolation, UniqueConstraintViolation, CheckConstraintViolation,
-              NotNullConstraintViolation, ForeignKeyConstraintViolation => e
-            message = e.message[/DETAIL:(.*)/]
+              NotNullConstraintViolation, ForeignKeyConstraintViolation, MassAssignmentRestriction => e
+            message = e.message[/DETAIL:(.*)/] || e.to_s
             status = 400
             response = {error: {msg: message, status_code: status}}
           end
