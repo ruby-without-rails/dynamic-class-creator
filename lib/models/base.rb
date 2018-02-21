@@ -65,9 +65,6 @@ module Models
       end
     end
 
-    class UnexpectedParamException < ModelException;
-    end
-
     # BaseModel is just an alias to Sequel::Model class:
     class BaseModel < Sequel::Model
       @require_valid_table = false
@@ -76,14 +73,6 @@ module Models
       Sequel::Model.plugin :force_encoding, @forced_encoding
       Sequel.split_symbols = true
       Sequel.extension :postgres_schemata
-    end
-
-    # Class [BusinessModel] is just a signal that a business class is generic
-    # and it's not binded to a specific entity or connection in database.
-    class BusinessModel
-      def initialize
-        raise 'Essa classe não pode ser instanciada.'
-      end
     end
   end
 end

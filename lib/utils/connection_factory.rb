@@ -4,7 +4,7 @@ include Models::Base
 
 module Utils
 
-  class ConnectionFactory < BusinessModel
+  class ConnectionFactory
     class << self
       def criar_conexao(parametros_conexao)
         connection_params = {
