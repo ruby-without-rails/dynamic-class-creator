@@ -48,7 +48,7 @@ module Controller
             the_class = class_from_string(mapped_class[:class_name])
             raise ModelException.new "Class not found for name: #{mapped_class[:class_name]}" unless the_class
 
-            {status: _status_code, response: params}
+            {status: _status_code, response: the_class.create(params)&.values}
           }
         }
       end

@@ -2,6 +2,8 @@ require 'codecode/common/utils'
 require_relative '../utils/class_factory'
 
 
+Dynamics = ::Module.new
+
 module Controller
   # module BaseController
   module BaseController
@@ -9,8 +11,6 @@ module Controller
     include Utils::ClassFactory
 
     DB = Models::Base::DB
-
-    Dynamics = Module.new
 
     ClassMap = create_classes(DB, Dynamics)
 
