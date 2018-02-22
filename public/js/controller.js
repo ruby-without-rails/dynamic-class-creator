@@ -4,7 +4,7 @@
 var myApp = angular.module('myApp', ['ngMaterial']);
 
 myApp.controller('appCtrl', function ($scope, $http) {
-    var baseUrl = 'http://localhost:9494';
+    var baseUrl = 'http://localhost:9494/api';
 
     $scope.icon = 'img/60.png';
     $scope.tables = [];
@@ -12,7 +12,7 @@ myApp.controller('appCtrl', function ($scope, $http) {
     $scope.schema = "";
     $scope.countOfTables = 0;
 
-    $http({method: 'OPTIONS', url: baseUrl + '/tables'})
+    $http({method: 'GET', url: baseUrl + '/tables'})
         .then(function (returnData) {
 
             $scope.tables = returnData.data.tables;

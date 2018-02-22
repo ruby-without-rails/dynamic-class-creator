@@ -40,7 +40,7 @@ module Helpers
 
           begin
             api_instance.content_type CONTENT_TYPE
-            body_params = !payload.empty? && !payload.is_a?(IndifferentHash) && payload.length >= 2 && payload.match?(/\{*}/) ? JSON.parse(payload) : payload
+            body_params = !payload.empty? && !payload.is_a?(IndifferentHash) && payload.length >= 2 && payload.match?(/\{*}/) ? ::JSON.parse(payload) : payload
 
             if body_params.is_a?(Hash)
               symbolize_keys!(body_params)

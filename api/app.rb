@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/contrib/all'
 require 'sinatra/sequel'
 require 'json'
 
@@ -12,7 +13,7 @@ require_relative '../lib/controllers/mini_controller'
 
 # @class App
 class App < Sinatra::Application
-  register Sinatra::SequelExtension
+  register Sinatra::SequelExtension, Sinatra::Namespace, Sinatra::Reloader
 
   include Controller::BaseController
   extend Controller::MiniController
@@ -26,9 +27,13 @@ class App < Sinatra::Application
     set :show_exceptions, true
 
     enable :cross_origin
+    enable :reloader
+
+    set :root, File.dirname(__FILE__)
+    set :public_folder, Proc.new { File.join(root, '../', 'public') }
   }
 
-  before {
+  before do
     content_type :html, 'charset' => 'utf-8'
     content_type :json, 'charset' => 'utf-8'
 
@@ -36,7 +41,7 @@ class App < Sinatra::Application
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
     headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token, KUADRO_AUTH_TOKEN, Kuadro-Auth-Token'
-  }
+  end
 
   after {}
 
@@ -54,6 +59,10 @@ class App < Sinatra::Application
     response.headers['Access-Control-Allow-Origin'] = '*'
     200
   }
+
+  after_reload do
+    puts 'reloaded'
+  end
 
   run!
 end

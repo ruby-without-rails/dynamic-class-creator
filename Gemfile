@@ -21,6 +21,7 @@ gem 'pg'
 gem 'sinatra'
 gem 'sinatra-sequel'
 gem 'sinatra-authorization'
+gem 'sinatra-contrib'
 
 group :test do
   gem 'faker'
