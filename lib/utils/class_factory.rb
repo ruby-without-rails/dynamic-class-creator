@@ -36,8 +36,10 @@ module Utils
         table_schema = t[:schema]
 
         table_constraints = get_table_constraints(connection, table_name)
-        t[:table_constraints] = table_constraints.map {|tc| {type: tc[:constraint_type], name: tc[:constraint_name]}}
-        primary_key_name = t[:table_constraints].detect {|tc| tc[:type].eql?('PRIMARY KEY')}
+        t[:constraints] = table_constraints.map {|tc| {type: tc[:constraint_type], name: tc[:constraint_name]}}
+        primary_key_name = t[:constraints].detect {|tc| tc[:type].eql?('PRIMARY KEY')}
+
+        t[:columns_n_types] = get_table_columns(connection, table_name)
 
         dynamic_name = snake_case_to_camel_case_name(table_name)
         classes = []
@@ -76,6 +78,11 @@ module Utils
 
         classes
       }
+    end
+
+    def get_table_columns(connection, table_name)
+      query = SHOW_COLUMNS
+      ConnectionFactory.execute_query(connection, query.gsub('?', table_name), false)
     end
 
     def get_classes(module_instance)

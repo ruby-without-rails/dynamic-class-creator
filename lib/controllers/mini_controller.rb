@@ -33,6 +33,13 @@ module Controller
             }
           }
 
+          c.get('/columns/:table_name') {|table_name|
+            make_default_json_api(self, {}, table_name) {|mapped_class, _the_class|
+
+              {"#{mapped_class[:table_name]}": mapped_class[:columns_n_types]}
+            }
+          }
+
           c.get('/table/:table_name/:id') {|table_name, id|
             make_default_json_api(self, {}, table_name) {|mapped_class, the_class|
 
