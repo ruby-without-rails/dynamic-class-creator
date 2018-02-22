@@ -47,6 +47,15 @@ module Controller
             }
           }
 
+          c.delete('/table/:table_name/:id') {|table_name, id|
+            make_default_json_api(self, {}, table_name) {|_mapped_class, the_class|
+
+              the_class[id].delete
+
+              {msg: "object with id: #{id} was success removed"}
+            }
+          }
+
           c.post('/table/:table_name') {|table_name|
             make_default_json_api(self, request.body.read&.delete("\n"), table_name) {|params, _status_code, _mapped_class, the_class|
 

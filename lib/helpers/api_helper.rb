@@ -17,10 +17,10 @@ module Helpers
 
         unless table_name.empty?
           mapped_class = App::ClassMap.detect {|map| map[:table_name] == table_name}
-          raise ModelException.new "Mapped class not found for name: #{table_name}" unless mapped_class
+          return ModelException.new("Mapped class not found for name: #{table_name}").to_response unless mapped_class
 
           the_class = class_from_string(mapped_class[:class_name])
-          raise ModelException.new "Class not found for name: #{mapped_class[:class_name]}" unless the_class
+          return ModelException.new("Class not found for name: #{mapped_class[:class_name]}").to_response unless the_class
         end
 
 
