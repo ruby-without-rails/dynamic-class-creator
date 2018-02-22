@@ -7,13 +7,14 @@ require_relative '../lib/loadpath'
 require_relative '../lib/models/base'
 require_relative '../lib/requires'
 require_relative '../lib/aliases'
+require_relative '../lib/exceptions/model_exception'
 require_relative '../lib/exceptions/unexpected_param_exception'
 require_relative '../lib/controllers/base_controller'
 require_relative '../lib/controllers/mini_controller'
 
 # @class App
 class App < Sinatra::Application
-  register Sinatra::SequelExtension, Sinatra::Namespace, Sinatra::Reloader
+  register Sinatra::SequelExtension, Sinatra::Namespace
 
   include Controller::BaseController
   extend Controller::MiniController
@@ -59,10 +60,6 @@ class App < Sinatra::Application
     response.headers['Access-Control-Allow-Origin'] = '*'
     200
   }
-
-  after_reload do
-    puts 'reloaded'
-  end
 
   run!
 end
