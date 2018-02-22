@@ -10,7 +10,7 @@ module Utils
           when /darwin|mac os/ then :macosx
           when /linux/ then :linux
           when /solaris|bsd/ then :unix
-          else raise StandardError, "Sistema Operacional não identificado: #{self.os_string.inspect}"
+          else raise StandardError, "Operational system not defined: #{self.os_string.inspect}"
         end
       end
 

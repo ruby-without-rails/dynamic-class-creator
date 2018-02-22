@@ -15,7 +15,7 @@ module Models
       begin
         YAML.safe_load(File.open(file_path))
       rescue
-        raise "[Startup Info] - Arquivo de configuração [#{file}] não encontrado no diretório [#{file_path}]"
+        raise "[Startup Info] - Config file [#{file}] not found in this directory [#{file_path}]"
       end
     end
 
@@ -39,10 +39,8 @@ module Models
 
     # BaseModel is just an alias to Sequel::Model class:
     class BaseModel < Sequel::Model
-      @require_valid_table = false
-      @forced_encoding = 'UTF-8'
-
-      Sequel::Model.plugin :force_encoding, @forced_encoding
+      Sequel::Model.require_valid_table = false
+      Sequel::Model.plugin :force_encoding, 'UTF-8'
       Sequel.split_symbols = true
       Sequel.extension :postgres_schemata
     end
