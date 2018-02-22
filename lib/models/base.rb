@@ -25,15 +25,15 @@ module Models
     end
 
     # Database access constants:
-    DB = load_db
+    DATABASE = load_db
 
     unless Utils::DiscoverOSUtil.os?.eql?(:windows)
       if Sequel::Postgres.supports_streaming?
         # If streaming is supported, you can load the streaming support into the database:
-        DB.extension(:pg_streaming)
+        DATABASE.extension(:pg_streaming)
         # If you want to enable streaming for all of a database's datasets, you can do the following:
-        DB.stream_all_queries = true
-        puts '[Startup Info] - Postgresql streaming foi ativado.'
+        DATABASE.stream_all_queries = true
+        puts '[Startup Info] - Postgresql streaming was activated.'
       end
     end
 

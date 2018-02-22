@@ -8,7 +8,7 @@ module Models
   class Configuration < BaseModel
 
     # Set Configuration dataset:
-    set_dataset DB[:configuration]
+    set_dataset DATABASE[:configuration]
 
     # Set primary key and relationships:
     set_primary_key :id

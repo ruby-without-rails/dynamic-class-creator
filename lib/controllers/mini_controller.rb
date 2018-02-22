@@ -4,15 +4,6 @@ module Controller
       def extended(controller)
         controller.include Helpers::ApiHelper::ApiBuilder
 
-        controller.get('/') {
-          file_path = File.join(settings.public_folder, 'index.html')
-          if File.exist?(file_path) && File.readable?(file_path)
-            send_file file_path
-          else
-            'File not Found!'
-          end
-        }
-
         controller.namespace('/api') { |c|
           c.get('') {
             make_default_json_api(self) {
@@ -22,51 +13,51 @@ module Controller
 
           c.get('/tables') {
             make_default_json_api(self) {
-              {database: DB.opts[:database], schema: App::ClassMap.first[:schema], tables: App::ClassMap}
+              {database: DATABASE.opts[:database], schema: App::ClassMap.first[:schema], tables: App::ClassMap}
             }
           }
 
           c.get('/table/:table_name') {|table_name|
-            make_default_json_api(self, {}, table_name) {|mapped_class, the_class|
+            make_default_json_api(self, {}, table_name) {|mapped_class, klass|
 
-              {"#{mapped_class[:table_name]}": the_class.all.map(&:values)}
+              {"#{mapped_class[:table_name]}": klass.all.map(&:values)}
             }
           }
 
           c.get('/columns/:table_name') {|table_name|
-            make_default_json_api(self, {}, table_name) {|mapped_class, _the_class|
+            make_default_json_api(self, {}, table_name) {|mapped_class, _klass|
 
               {"#{mapped_class[:table_name]}": mapped_class[:columns_n_types]}
             }
           }
 
           c.get('/table/:table_name/:id') {|table_name, id|
-            make_default_json_api(self, {}, table_name) {|mapped_class, the_class|
+            make_default_json_api(self, {}, table_name) {|mapped_class, klass|
 
-              {"#{mapped_class[:table_name]}": the_class.obter_por_id(id)&.values}
+              {"#{mapped_class[:table_name]}": klass.find_by_id(id)&.values}
             }
           }
 
           c.delete('/table/:table_name/:id') {|table_name, id|
-            make_default_json_api(self, {}, table_name) {|_mapped_class, the_class|
+            make_default_json_api(self, {}, table_name) {|_mapped_class, klass|
 
-              the_class[id].destroy
+              klass[id].destroy
 
               {msg: "object with id: #{id} was success removed"}
             }
           }
 
           c.post('/table/:table_name') {|table_name|
-            make_default_json_api(self, request.body.read&.delete("\n"), table_name) {|params, _status_code, _mapped_class, the_class|
+            make_default_json_api(self, request.body.read&.delete("\n"), table_name) {|params, _status_code, _mapped_class, klass|
 
-              {status: 201, response: the_class.create(params)&.values}
+              {status: 201, response: klass.create(params)&.values}
             }
           }
 
           c.put('/table/:table_name/:id') {|table_name, id|
-            make_default_json_api(self, request.body.read&.delete("\n"), table_name) {|params, _status_code, _mapped_class, the_class|
+            make_default_json_api(self, request.body.read&.delete("\n"), table_name) {|params, _status_code, _mapped_class, klass|
 
-              object = the_class[id]
+              object = klass[id]
               raise ModelException.new "Object not found with id: #{id}" unless object
 
               {status: _status_code, response: object.update(params)&.values}

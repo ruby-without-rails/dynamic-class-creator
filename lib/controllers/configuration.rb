@@ -5,7 +5,7 @@ require 'requires'
 require 'base_controller'
 
 module Controllers
-  module ConfiguracaoCtrl
+  module ConfigurationCtrl
     class << self
       def extended(controller)
         controller.include Utils::ApiHelper

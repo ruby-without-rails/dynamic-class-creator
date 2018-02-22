@@ -17,10 +17,10 @@ module Utils
     # --EXIBINDO AS CONSTRAINTS DAS TABELAS:
     # select table_name, constraint_type, constraint_name
     # from information_schema.table_constraints where constraint_type in ('PRIMARY KEY', 'FOREIGN KEY') order by table_name, constraint_type;
-    SHOW_CONSTRAINTS = "select table_name, constraint_type, constraint_name from information_schema.table_constraints where constraint_type in ('PRIMARY KEY', 'FOREIGN KEY') and table_name = '?' order by table_name, constraint_type;"
+    SHOW_CONSTRAINTS = "select table_name, constraint_type, constraint_name from information_schema.table_constraints where constraint_type in ('PRIMARY KEY', 'FOREIGN KEY') and table_name = '?' order by table_name, constraint_type;".freeze
 
     def class_from_string(str)
-      str.split('::').inject(Object) {|mod, class_name| mod.const_get(class_name)}
+      str.split('::').inject(Object) { |mod, class_name| mod.const_get(class_name) }
     end
 
     def get_table_constraints(connection, table_name)
@@ -30,14 +30,14 @@ module Utils
 
     def create_classes(connection, module_constant)
       table_info = scan_classes(connection)
-      table_info.each {|t|
+      table_info.each { |t|
 
         table_name = t[:table_name]
         table_schema = t[:schema]
 
         table_constraints = get_table_constraints(connection, table_name)
-        t[:constraints] = table_constraints.map {|tc| {type: tc[:constraint_type], name: tc[:constraint_name]}}
-        primary_key_name = t[:constraints].detect {|tc| tc[:type].eql?('PRIMARY KEY')}
+        t[:constraints] = table_constraints.map { |tc| {type: tc[:constraint_type], name: tc[:constraint_name]} }
+        primary_key_name = t[:constraints].detect { |tc| tc[:type].eql?('PRIMARY KEY') }
 
         t[:columns_n_types] = get_table_columns(connection, table_name)
 
@@ -45,7 +45,7 @@ module Utils
         classes = []
 
         begin
-          Object.const_set(dynamic_name, Class.new(BaseModel) {|klass|
+          Object.const_set(dynamic_name, Class.new(BaseModel) { |klass|
             @db = connection
             @require_valid_table = false
             @primary_key = primary_key_name
@@ -61,8 +61,7 @@ module Utils
             set_dataset(connection[table_name.to_sym])
 
             class << self
-              define_method('find_by_id') {|value| self[value]}
-              alias_method :obter_por_id, :find_by_id
+              define_method('find_by_id') { |value| self[value] }
             end
 
             module_constant.const_set(dynamic_name, klass)
@@ -86,7 +85,7 @@ module Utils
     end
 
     def get_classes(module_instance)
-      module_instance.constants.select {|c| module_instance.const_get(c).is_a? Class}
+      module_instance.constants.select { |c| module_instance.const_get(c).is_a? Class }
     end
 
     def scan_classes(connection)
@@ -96,13 +95,13 @@ module Utils
     private
 
     def scan_fields(connection, table_name)
-      query = SHOW_COLUMNS.gsub("?", table_name)
+      query = SHOW_COLUMNS.gsub('?', table_name)
       ConnectionFactory.executar_query_sql(connection, query, false)
     end
 
     private
     def snake_case_to_camel_case_name(string)
-      string = string.tr('_', ' ').split.map.with_index {|x, i| i.zero? ? x : x.capitalize}.join
+      string = string.tr('_', ' ').split.map.with_index { |x, i| i.zero? ? x : x.capitalize }.join
       string[0] = string[0].upcase
       string
     end
