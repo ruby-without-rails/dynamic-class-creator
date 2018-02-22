@@ -1,6 +1,8 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    backports (3.11.1)
+    bacon (1.2.0)
     codecode-common-utils (0.1.5)
     concurrent-ruby (1.0.5)
     diff-lcs (1.3)
@@ -8,7 +10,12 @@ GEM
       i18n (~> 0.5)
     i18n (0.9.1)
       concurrent-ruby (~> 1.0)
+    multi_json (1.13.1)
+    mustermann (1.0.2)
     pg (0.21.0)
+    rack (2.0.4)
+    rack-protection (2.0.1)
+      rack
     rspec (3.7.0)
       rspec-core (~> 3.7.0)
       rspec-expectations (~> 3.7.0)
@@ -25,9 +32,30 @@ GEM
     sequel (4.49.0)
     sequel-postgres-schemata (0.1.1)
       sequel (~> 4.3)
+    sequel_enum (0.1.1)
+      sequel
     sequel_pg (1.7.1)
       pg (>= 0.8.0)
       sequel (>= 4.0.0)
+    sinatra (2.0.1)
+      mustermann (~> 1.0)
+      rack (~> 2.0)
+      rack-protection (= 2.0.1)
+      tilt (~> 2.0)
+    sinatra-authorization (1.0.0)
+      sinatra (>= 0.9.1.1)
+    sinatra-contrib (2.0.1)
+      backports (>= 2.0)
+      multi_json
+      mustermann (~> 1.0)
+      rack-protection (= 2.0.1)
+      sinatra (= 2.0.1)
+      tilt (>= 1.3, < 3)
+    sinatra-sequel (0.9.0)
+      bacon
+      sequel (>= 3.2.0)
+      sinatra (>= 0.9.4)
+    tilt (2.0.8)
 
 PLATFORMS
   ruby
@@ -39,10 +67,15 @@ DEPENDENCIES
   rspec
   sequel (< 5)
   sequel-postgres-schemata
+  sequel_enum
   sequel_pg
+  sinatra
+  sinatra-authorization
+  sinatra-contrib
+  sinatra-sequel
 
 RUBY VERSION
    ruby 2.4.2p198
 
 BUNDLED WITH
-   1.16.0
+   1.16.1

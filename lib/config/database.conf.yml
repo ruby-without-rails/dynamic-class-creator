@@ -1,5 +1,5 @@
-host: xxx
-user: xxx
-password: xxx
-database: xxx
-port: xxx
+host: localhost
+user: postgres
+password: postgres
+database: moneto_dev
+port: 5432
