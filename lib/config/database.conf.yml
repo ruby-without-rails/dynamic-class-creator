@@ -1,5 +1,5 @@
 host: localhost
 user: postgres
 password: postgres
-database: moneto_dev
+database: postgres
 port: 5432
