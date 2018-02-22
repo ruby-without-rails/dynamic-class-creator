@@ -50,7 +50,7 @@ module Controller
           c.delete('/table/:table_name/:id') {|table_name, id|
             make_default_json_api(self, {}, table_name) {|_mapped_class, the_class|
 
-              the_class[id].delete
+              the_class[id].destroy
 
               {msg: "object with id: #{id} was success removed"}
             }
