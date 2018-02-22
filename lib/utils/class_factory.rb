@@ -94,6 +94,13 @@ module Utils
     end
 
     private
+
+    def scan_fields(connection, table_name)
+      query = SHOW_COLUMNS.gsub("?", table_name)
+      ConnectionFactory.executar_query_sql(connection, query, false)
+    end
+
+    private
     def snake_case_to_camel_case_name(string)
       string = string.tr('_', ' ').split.map.with_index {|x, i| i.zero? ? x : x.capitalize}.join
       string[0] = string[0].upcase
