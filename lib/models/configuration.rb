@@ -13,7 +13,9 @@ module Models
     # Set primary key and relationships:
     set_primary_key :id
 
-    # def initialize; end
+    def initialize
+
+    end
 
     class << self
       def save_configuration(name, value)
@@ -39,6 +41,11 @@ module Models
 
       def list_apis(controller)
         routes = controller.routes
+
+        # %w(POST GET DELETE OPTIONS PUT PATCH).each{|method|
+        #   const_set("#{method.downcase}_routes", routes[method].collect {|r| r.first.to_s})
+        # }
+
         post_routes = routes['POST'].collect {|r| r.first.to_s}
         get_routes = routes['GET'].collect {|r| r.first.to_s}
         delete_routes = routes['DELETE'].collect {|r| r.first.to_s}

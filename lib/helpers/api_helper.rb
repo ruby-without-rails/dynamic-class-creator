@@ -30,7 +30,7 @@ module Helpers
             api_instance.content_type CONTENT_TYPE
             status = 200
             my_yield = table_name.empty? || table_name.nil? ? yield : yield(mapped_class, the_class)
-            block_given? ? response = my_yield : response = {msg: 'Api ainda não implementada.'}
+            block_given? ? response = my_yield : response = {msg: 'Api not implemented yet.'}
           rescue ModelException => e
             status = 400
             response = {error: {msg: e.message, status_code: status}}
@@ -57,12 +57,12 @@ module Helpers
             else
               response = {msg: 'Api não implementada.'}
             end
-          rescue ModelException => e
-            status = 400
-            response = {error: {msg: e.message, status_code: status}}
-          rescue ConstraintViolation, UniqueConstraintViolation, CheckConstraintViolation,
+          rescue ModelException, ConstraintViolation, UniqueConstraintViolation, CheckConstraintViolation,
               NotNullConstraintViolation, ForeignKeyConstraintViolation, MassAssignmentRestriction => e
+
+            message = e.message if e.is_a?(ModelException)
             message = e.message[/DETAIL:(.*)/] || e.to_s
+
             status = 400
             response = {error: {msg: message, status_code: status}}
           end
