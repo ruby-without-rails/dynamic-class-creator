@@ -21,8 +21,6 @@ class App < Sinatra::Application
 
   configure {
     set :environment, :development
-    set :bind, '0.0.0.0'
-    set :port, 9494
 
     set :raise_errors, true
     set :show_exceptions, true
@@ -61,5 +59,4 @@ class App < Sinatra::Application
     200
   }
 
-  run!
 end
