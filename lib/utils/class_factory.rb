@@ -20,6 +20,9 @@ module Utils
     # from information_schema.table_constraints where constraint_type in ('PRIMARY KEY', 'FOREIGN KEY') order by table_name, constraint_type;
     SHOW_CONSTRAINTS = "SELECT table_name, constraint_type, constraint_name FROM information_schema.table_constraints where constraint_type IN ('PRIMARY KEY', 'FOREIGN KEY') AND table_name = '?' ORDER BY table_name, constraint_type;".freeze
 
+    # --EXIBINDO AS FOREIGN KEYS DAS TABELAS:
+    SHOW_FOREIGN_KEYS = "SELECT tc.constraint_name , tc.table_name as source_table, kcu.column_name as source_column, ccu.table_name AS target_table, ccu.column_name AS target_column FROM information_schema.table_constraints AS tc JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name WHERE constraint_type = 'FOREIGN KEY' AND tc.table_name='?';"
+
     def class_from_string(str)
       str.split('::').inject(Object) {|mod, class_name| mod.const_get(class_name)}
     end
@@ -29,7 +32,12 @@ module Utils
       ConnectionFactory.execute_query(connection, query.gsub('?', table_name), false)
     end
 
-    def create_classes(connection, module_constant, name_convention = false)
+    def get_table_foreign_keys(connection, table_name)
+      query = SHOW_FOREIGN_KEYS
+      ConnectionFactory.execute_query(connection, query.gsub('?', table_name), false)
+    end
+
+    def create_classes(connection, module_constant, name_convention = true)
       table_info = scan_classes(connection)
       table_info.each {|t|
 
@@ -37,7 +45,9 @@ module Utils
         table_schema = t[:schema]
 
         table_constraints = get_table_constraints(connection, table_name)
+        table_fks = get_table_foreign_keys(connection, table_name)
         t[:constraints] = table_constraints.map {|tc| {type: tc[:constraint_type], name: tc[:constraint_name]}}
+        t[:foreign_keys] = table_fks
         primary_key_name = t[:constraints].detect {|tc| tc[:type].eql?('PRIMARY KEY')}
 
         t[:columns_n_types] = get_table_columns(connection, table_name)
@@ -46,7 +56,8 @@ module Utils
         classes = []
 
         begin
-          Object.const_set(dynamic_name, Class.new(BaseModel) {|klass|
+          parent_class = name_convention ? Sequel::Model(table_name.to_sym) : BaseModel
+          Object.const_set(dynamic_name, Class.new(parent_class) {|klass|
             @db = connection
 
             unless name_convention
