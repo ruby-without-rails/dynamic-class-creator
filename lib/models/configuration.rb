@@ -1,5 +1,5 @@
-require 'delfos/requires'
-
+# frozen_string_literal: true
+require 'requires'
 
 module Models
   include Models::Base
@@ -8,14 +8,12 @@ module Models
   class Configuration < BaseModel
 
     # Set Configuration dataset:
-    set_dataset DATABASE[:configuration]
+    set_dataset Models::DATABASE[:configuration]
 
     # Set primary key and relationships:
-    set_primary_key :id
+    set_primary_key :key
 
-    def initialize
-
-    end
+    def initialize; end
 
     class << self
       def save_configuration(name, value)

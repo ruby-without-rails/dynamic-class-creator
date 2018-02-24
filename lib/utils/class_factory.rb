@@ -17,7 +17,7 @@ module Utils
     # --EXIBINDO AS CONSTRAINTS DAS TABELAS:
     # select table_name, constraint_type, constraint_name
     # from information_schema.table_constraints where constraint_type in ('PRIMARY KEY', 'FOREIGN KEY') order by table_name, constraint_type;
-    SHOW_CONSTRAINTS = "select table_name, constraint_type, constraint_name from information_schema.table_constraints where constraint_type in ('PRIMARY KEY', 'FOREIGN KEY') and table_name = '?' order by table_name, constraint_type;".freeze
+    SHOW_CONSTRAINTS = "SELECT table_name, constraint_type, constraint_name FROM information_schema.table_constraints where constraint_type IN ('PRIMARY KEY', 'FOREIGN KEY') AND table_name = '?' ORDER BY table_name, constraint_type;".freeze
 
     def class_from_string(str)
       str.split('::').inject(Object) { |mod, class_name| mod.const_get(class_name) }

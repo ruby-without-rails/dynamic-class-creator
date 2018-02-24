@@ -1,8 +1,7 @@
 module Controller
   module MiniController
     class << self
-      def extended(controller)
-        controller.include Helpers::ApiHelper::ApiBuilder
+      def included(controller)
 
         controller.namespace('/api') { |c|
           c.get('') {
