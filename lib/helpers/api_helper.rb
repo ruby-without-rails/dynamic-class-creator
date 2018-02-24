@@ -9,7 +9,6 @@ module Helpers
     module ApiBuilder
       include Sequel
       include Sinatra
-      include CodeCode::Common::Utils::Hash
       include Utils::ClassFactory
 
       CONTENT_TYPE = 'application/json;charset=utf-8'.freeze
@@ -42,13 +41,8 @@ module Helpers
 
           begin
             api_instance.content_type CONTENT_TYPE
-            body_params = !payload.empty? && !payload.is_a?(IndifferentHash) && payload.length >= 2 && payload.match?(/\{*}/) ? ::JSON.parse(payload) : payload
-
-            if body_params.is_a?(Hash)
-              symbolize_keys!(body_params)
-            else
-              raise ModelException.new 'Cannot parse Payload.'
-            end
+            body_params = !payload.empty? && !payload.is_a?(IndifferentHash) && payload.length >= 2 && payload.match?(/\{*}/) ? ::MultiJson.decode(payload, symbolize_keys: true) : payload
+            raise ModelException.new 'Cannot parse Payload.' unless payload
 
             status = 200
 

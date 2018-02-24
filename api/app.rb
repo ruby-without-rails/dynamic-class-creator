@@ -40,21 +40,14 @@ class App < Sinatra::Application
   before {
     content_type :html, 'charset' => 'utf-8'
     content_type :json, 'charset' => 'utf-8'
-
-    # response.headers['Access-Control-Allow-Origin'] = '*'
-    # headers['Access-Control-Allow-Origin'] = '*'
-    # headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-    # headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token, AUTH_TOKEN, Auth-Token'
   }
 
   after {}
 
   error(500, 400) {
-    # Log uncaught errors with Sentry, sending env variables
-    # and the request body
     extra = env
-    extra['REQUEST_BODY'] = @request.params
-    puts extra
+    extra['REQUEST_BODY'] = @request.body.read
+    warn extra
   }
 
   helpers {
