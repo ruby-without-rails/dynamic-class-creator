@@ -26,6 +26,7 @@ class App < Sinatra::Application
 
   configure {
     set :environment, :development
+    set server: 'webrick'
 
     set :raise_errors, true
     set :show_exceptions, true
@@ -56,11 +57,10 @@ class App < Sinatra::Application
     puts extra
   }
 
-  options('*') {
-    response.headers['Allow'] = 'GET, POST, PUT, DELETE, OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token, AUTH_TOKEN, Auth-Token'
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    200
+  helpers {
+    def parsed_body
+      ::MultiJson.decode(@request.body)
+    end
   }
 
 
