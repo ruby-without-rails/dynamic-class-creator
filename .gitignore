@@ -25,4 +25,4 @@ build-iPhoneSimulator/
 /lib/bundler/man/
 .rvmrc
 .idea/
-
+Gemfile.lock
