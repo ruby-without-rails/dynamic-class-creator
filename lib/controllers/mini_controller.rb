@@ -1,4 +1,4 @@
-module Controller
+module Controllers
   module MiniController
     class << self
       def included(controller)

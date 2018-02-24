@@ -56,7 +56,7 @@ module Helpers
               status = return_data[:status]
               response = return_data[:response]
             else
-              response = {msg: 'Api não implementada.'}
+              response = {msg: 'Api not implemented yet.'}
             end
           rescue ModelException, ConstraintViolation, UniqueConstraintViolation, CheckConstraintViolation,
               NotNullConstraintViolation, ForeignKeyConstraintViolation, MassAssignmentRestriction => e
@@ -75,7 +75,7 @@ module Helpers
     module ApiValidation
 
       def validate_params(body_params, symbols)
-        symbols.each {|s| raise ModelException, "Parâmetro #{s} não encontrado. Payload incorreto." unless body_params.key?(s)}
+        symbols.each {|s| raise ModelException, "Parameter #{s} not found. Invalid payload." unless body_params.key?(s)}
       end
     end
   end

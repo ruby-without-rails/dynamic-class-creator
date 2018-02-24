@@ -62,6 +62,7 @@ module Utils
 
             class << self
               define_method('find_by_id') { |value| self[value] }
+              define_method('delete_by_id') { |value| self[value].destroy }
             end
 
             module_constant.const_set(dynamic_name, klass)
@@ -69,7 +70,7 @@ module Utils
             classes << klass
 
             t[:class_name] = klass.name
-            puts t[:class_name]
+            puts "Creating class: #{t[:class_name]}"
           })
         ensure
           connection.disconnect

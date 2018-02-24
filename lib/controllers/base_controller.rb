@@ -1,4 +1,4 @@
-module Controller
+module Controllers
   # module BaseController
   module BaseController
 

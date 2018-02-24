@@ -15,8 +15,11 @@ Dynamics = ::Module.new
 class App < Sinatra::Application
   register Sinatra::SequelExtension, Sinatra::Namespace
 
-  include Controller::BaseController
-  include Controller::MiniController
+
+  Controllers.constants.each{|controller|
+    module_name = Kernel.const_get('Controllers::?'.gsub('?', controller.to_s))
+    include module_name
+  }
 
   extend Utils::ClassFactory
 
@@ -33,15 +36,15 @@ class App < Sinatra::Application
     set :public_folder, Proc.new { File.join(root, '../', 'public') }
   }
 
-  before do
+  before {
     content_type :html, 'charset' => 'utf-8'
     content_type :json, 'charset' => 'utf-8'
 
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    headers['Access-Control-Allow-Origin'] = '*'
-    headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-    headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token, AUTH_TOKEN, Auth-Token'
-  end
+    # response.headers['Access-Control-Allow-Origin'] = '*'
+    # headers['Access-Control-Allow-Origin'] = '*'
+    # headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    # headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token, AUTH_TOKEN, Auth-Token'
+  }
 
   after {}
 
