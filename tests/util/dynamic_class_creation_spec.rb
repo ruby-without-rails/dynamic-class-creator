@@ -10,6 +10,7 @@ require 'rspec'
 
 describe 'Dynamic Class Creator' do
 
+  include Models
   include Utils::ClassFactory
 
   conn = nil
@@ -24,15 +25,7 @@ describe 'Dynamic Class Creator' do
 
   def self.load_db
     yaml = load_config_file
-
-    case ENV['RACK_ENV']
-      when 'HMG' then
-        fail 'Not implemented yet!'
-      when 'PROD' then
-        fail 'Not implemented yet!'
-      else
-        Sequel.postgres(yaml)
-    end
+    Sequel.postgres(yaml)
   end
 
 
@@ -42,7 +35,6 @@ describe 'Dynamic Class Creator' do
   yaml = load_config_file
 
   before do
-    # conn = ConnectionFactory.criar_conexao(yaml)
     conn = DB
   end
 

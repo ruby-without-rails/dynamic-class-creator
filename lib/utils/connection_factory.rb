@@ -1,7 +1,3 @@
-require 'requires'
-
-include Models::Base
-
 module Utils
   class ConnectionFactory
     class << self

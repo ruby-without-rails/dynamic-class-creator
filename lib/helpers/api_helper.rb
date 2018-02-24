@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'json'
 
+require_relative '../../lib/models/base'
 require_relative '../../lib/utils/class_factory'
 
 module Helpers

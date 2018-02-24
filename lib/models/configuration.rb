@@ -1,6 +1,3 @@
-# frozen_string_literal: true
-require 'requires'
-
 module Models
   include Models::Base
 

@@ -1,5 +1,6 @@
 module Utils
   module ClassFactory
+    include Models::Base
 
     # --EXIBINDO OS BANCOS DE DADOS:
     # SELECT datname FROM pg_database;
