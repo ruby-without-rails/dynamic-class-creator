@@ -3,25 +3,19 @@ module Utils
     include Models::Base
 
     # --EXIBINDO OS BANCOS DE DADOS:
-    # SELECT datname FROM pg_database;
     SHOW_DBS = 'SELECT datname FROM pg_database;'.freeze
 
     # --EXIBINDO AS TABELAS DO BANCOS DE DADOS:
-    # SELECT table_schema as schema, table_name as table FROM information_schema.tables
-    # WHERE table_schema NOT IN ('pg_catalog', 'information_schema') ORDER BY table_schema;
     SHOW_TABLES = "SELECT table_schema as schema, table_name FROM information_schema.tables WHERE table_schema NOT IN ('pg_catalog', 'information_schema') ORDER BY table_schema;".freeze
 
     # --EXIBINDO AS COLUNAS DE UMA TABELA:
-    # SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '?';
     SHOW_COLUMNS = "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '?';".freeze
 
     # --EXIBINDO AS CONSTRAINTS DAS TABELAS:
-    # select table_name, constraint_type, constraint_name
-    # from information_schema.table_constraints where constraint_type in ('PRIMARY KEY', 'FOREIGN KEY') order by table_name, constraint_type;
     SHOW_CONSTRAINTS = "SELECT table_name, constraint_type, constraint_name FROM information_schema.table_constraints where constraint_type IN ('PRIMARY KEY', 'FOREIGN KEY') AND table_name = '?' ORDER BY table_name, constraint_type;".freeze
 
     # --EXIBINDO AS FOREIGN KEYS DAS TABELAS:
-    SHOW_FOREIGN_KEYS = "SELECT tc.constraint_name , tc.table_name as source_table, kcu.column_name as source_column, ccu.table_name AS target_table, ccu.column_name AS target_column FROM information_schema.table_constraints AS tc JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name WHERE constraint_type = 'FOREIGN KEY' AND tc.table_name='?';"
+    SHOW_FOREIGN_KEYS = "SELECT tc.constraint_name , tc.table_name as source_table, kcu.column_name as source_column, ccu.table_name AS target_table, ccu.column_name AS target_column FROM information_schema.table_constraints AS tc JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name WHERE constraint_type = 'FOREIGN KEY' AND tc.table_name='?';".freeze
 
     def class_from_string(str)
       str.split('::').inject(Object) {|mod, class_name| mod.const_get(class_name)}
