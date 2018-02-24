@@ -35,7 +35,7 @@ module Utils
       end
 
       def test_connection(connection_params)
-        all_tables_query = 'SELECT * FROM information_schema.tables)'.freeze
+        all_tables_query = 'SELECT * FROM information_schema.tables'.freeze
         all_schemas_query = 'SELECT schema_name FROM information_schema.schemata;'.freeze
 
         begin

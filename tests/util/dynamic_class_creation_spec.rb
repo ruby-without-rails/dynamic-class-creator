@@ -1,7 +1,10 @@
-require '../../lib/loadpath'
-require '../../lib/models/base'
-require '../../lib/requires'
-require '../../lib/aliases'
+require 'codecode/common/utils'
+require_relative '../../lib/loadpath'
+require_relative '../../lib/models/base'
+require_relative '../../lib/utils/connection_factory'
+require_relative '../../lib/utils/class_factory'
+require 'requires'
+require 'aliases'
 
 require 'rspec'
 
