@@ -22,7 +22,9 @@ myApp.config(function ($mdThemingProvider) {
 });
 
 myApp.controller('appCtrl', function ($scope, $http) {
-    var baseUrl = 'http://localhost:9494/api';
+
+    var loc = window.location;
+    var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "") + '/api';
 
     $scope.icon = 'img/60.png';
 

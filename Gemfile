@@ -6,6 +6,7 @@ require_relative 'lib/utils/discover_os'
 
 source 'http://rubygems.org'
 ruby '>= 2.1'
+gem 'bundler'
 
 gem 'codecode-common-utils', '~> 0.1.3'
 
@@ -22,6 +23,8 @@ gem 'sinatra'
 gem 'sinatra-sequel'
 gem 'sinatra-authorization'
 gem 'sinatra-contrib'
+
+gem 'rack-parser', :require => 'rack/parser'
 
 group :test do
   gem 'faker'

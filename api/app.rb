@@ -58,16 +58,15 @@ class App < Sinatra::Application
   }
 
   helpers {
-    def parsed_body
-      ::MultiJson.decode(@request.body)
+    DATABASE = Models::Base::DATABASE
+
+    ClassMap = create_classes(DATABASE, Dynamics)
+
+    Classes = get_classes(Dynamics)
+
+    def sample_method
+      'sample method'
     end
   }
-
-
-  DATABASE = Models::Base::DATABASE
-
-  ClassMap = create_classes(DATABASE, Dynamics)
-
-  Classes = get_classes(Dynamics)
 
 end
