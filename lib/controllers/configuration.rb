@@ -2,13 +2,11 @@
 # Base requirement
 #
 require 'requires'
-require 'base_controller'
 
 module Controllers
   module ConfigurationCtrl
     class << self
-      def extended(controller)
-        controller.include Utils::ApiHelper
+      def included(controller)
 
         controller.namespace('/api') {|c|
           c.get('/configuration/version') {

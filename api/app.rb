@@ -1,13 +1,13 @@
 require 'sinatra'
 require 'sinatra/contrib/all'
 require 'sinatra/sequel'
-require 'json'
 
 require_relative '../lib/loadpath'
 require 'requires'
 require 'aliases'
-require 'controllers/base_controller'
-require 'controllers/mini_controller'
+
+current_dir = Dir.pwd
+%w[controllers].each {|folder| Dir["#{current_dir}/lib/#{folder}/*.rb"].each {|file| require file}}
 
 Dynamics = ::Module.new
 

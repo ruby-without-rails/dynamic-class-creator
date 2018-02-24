@@ -42,7 +42,7 @@ module Controller
 
               klass[id].destroy
 
-              {msg: "object with id: #{id} was success removed"}
+              {msg: "#{klass.name} with id: #{id} was success removed."}
             }
           }
 

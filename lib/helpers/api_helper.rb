@@ -1,14 +1,15 @@
 require 'sinatra'
 require 'json'
-require_relative '../models/base'
+
+require_relative '../../lib/utils/class_factory'
 
 module Helpers
   module ApiHelper
     module ApiBuilder
-      include Models::Base
       include Sequel
       include Sinatra
       include CodeCode::Common::Utils::Hash
+      include Utils::ClassFactory
 
       CONTENT_TYPE = 'application/json;charset=utf-8'.freeze
 
@@ -72,7 +73,6 @@ module Helpers
     end
 
     module ApiValidation
-      include Models::Base
 
       def validate_params(body_params, symbols)
         symbols.each {|s| raise ModelException, "Parâmetro #{s} não encontrado. Payload incorreto." unless body_params.key?(s)}
