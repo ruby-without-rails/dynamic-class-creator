@@ -6,7 +6,7 @@ module Controllers
         controller.namespace('/api') {|c|
           c.get('/configuration/version') {
             make_default_json_api(self) {
-              Configuration.get_version
+              Configuration.app_version
             }
           }
 

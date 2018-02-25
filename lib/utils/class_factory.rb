@@ -1,4 +1,5 @@
 require 'inflector'
+require 'sequel'
 
 module Utils::ClassFactory
   include Models
@@ -33,12 +34,14 @@ module Utils::ClassFactory
     ConnectionFactory.execute_query(connection, query.gsub('?', table_name), false)
   end
 
-  def create_classes(connection, module_constant, name_convention = true)
+  def create_classes(connection, module_constant)
     table_info = scan_classes(connection)
     table_info.each {|t|
 
       table_name = t[:table_name]
       table_schema = t[:schema]
+
+      next if t[:table_name].eql?('configurations')
 
       table_constraints = get_table_constraints(connection, table_name)
       table_fks = get_table_foreign_keys(connection, table_name)
@@ -54,23 +57,16 @@ module Utils::ClassFactory
       classes = []
 
       begin
-        parent_class = name_convention ? Sequel::Model(table_name.to_sym) : BaseModel
-        Object.const_set(dynamic_name, Class.new(parent_class) {|klass|
+        Object.const_set(dynamic_name, Class.new(Sequel::Model) {|klass|
           @db = connection
+          @primary_key = primary_key_name
+          @simple_table = table_name
+          @db_schema = table_schema
 
-          unless name_convention
-            @require_valid_table = false
-            @primary_key = primary_key_name
-            @simple_table = table_name
-            @db_schema = table_schema
+          @table_name = table_name
+          @table_schema = table_schema
 
-            @table_name = table_name
-            @table_schema = table_schema
-            @fast_instance_delete_sql = ''
-            @fast_pk_lookup_sql = ''
-
-            set_dataset(connection[table_name.to_sym])
-          end
+          set_dataset(connection[table_name.to_sym], inherited: false, require_valid_table: false)
 
           class << self
             define_method('find_by_id') {|value| self[value]}

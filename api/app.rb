@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/cross_origin'
 require 'sinatra/contrib/all'
 require 'sinatra/sequel'
 
@@ -13,7 +14,7 @@ Dynamics = ::Module.new
 
 # @class App
 class App < Sinatra::Application
-  register Sinatra::SequelExtension, Sinatra::Namespace
+  register Sinatra::SequelExtension, Sinatra::Namespace, Sinatra::CrossOrigin
 
 
   Controllers.constants.each{|controller|
@@ -34,7 +35,13 @@ class App < Sinatra::Application
     enable :cross_origin
 
     set :root, File.dirname(__FILE__)
-    set :public_folder, Proc.new { File.join(root, '../', 'public') }
+    set :public_folder, File.join(root, '../', 'public')
+
+    set :allow_origin, :any
+    set :allow_methods, %i[get post put delete options]
+    set :allow_credentials, true
+    set :max_age, '1728000'
+    set :expose_headers, %w[Authorization Content-Type Accept X-User-Email X-Auth-Token AUTH_TOKEN Auth-Token]
   }
 
   before {

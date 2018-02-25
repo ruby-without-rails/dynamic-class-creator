@@ -52,7 +52,7 @@ module Controllers
               make_default_json_api(self, request.body.read&.delete("\n"), table_name) {|params, _status_code, _mapped_class, klass|
 
                 object = klass[id]
-                raise ModelException.new "Object not found with id: #{id}" unless object
+                raise ModelException.new "#{table_name} not found with id: #{id}" unless object
 
                 {status: _status_code, response: object.update(params)&.values}
               }

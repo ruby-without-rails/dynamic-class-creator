@@ -1,36 +1,33 @@
+require 'sequel'
+
 module Models
 
   # @class [Configuration]
-  class Configuration < BaseModel
-
-    # Set Configuration dataset:
-    set_dataset Models::DATABASE[:configuration]
+  class Configuration < Sequel::Model(:configurations)
 
     # Set primary key and relationships:
     set_primary_key :key
-
-    def initialize; end
+    unrestrict_primary_key
 
     class << self
-      def save_configuration(name, value)
-        c = Configuration.new
-        c.name = name
+      def save_configuration(key, value)
+        c = new
+        c.key = key
         c.value = value
         c.save
       end
 
-      def get_version
-        conf = Configuration.where(name: 'version').first
+      def app_version
+        conf = where(key: 'version').first
         conf.values
       end
 
-      def get_configuration(name)
-        conf = Configuration.where(name: name).first
-        conf.values
+      def get_configuration(key)
+        where(key: key).map(:values)
       end
 
       def list_configurations
-        Configuration.all.map(&:values)
+        all.map(&:values)
       end
 
       def list_apis(controller)

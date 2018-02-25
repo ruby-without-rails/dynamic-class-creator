@@ -19,6 +19,7 @@ gem 'sequel_pg', require: 'sequel' unless Utils::DiscoverOS.os?.eql?(:windows)
 gem 'inflector'
 
 gem 'sinatra'
+gem 'sinatra-cross_origin'
 gem 'sinatra-sequel'
 gem 'sinatra-authorization'
 gem 'sinatra-contrib'

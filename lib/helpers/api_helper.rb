@@ -17,6 +17,7 @@ module Helpers
         request_method = api_instance.env['REQUEST_METHOD']
 
         unless table_name.empty?
+          return ModelException.new("Forbidden access to: #{table_name}").to_response if table_name.eql?('configurations')
           mapped_class = App::ClassMap.detect {|map| map[:table_name] == table_name}
           return ModelException.new("Mapped class not found for name: #{table_name}").to_response unless mapped_class
 
@@ -56,8 +57,11 @@ module Helpers
           rescue ModelException, ConstraintViolation, UniqueConstraintViolation, CheckConstraintViolation,
               NotNullConstraintViolation, ForeignKeyConstraintViolation, MassAssignmentRestriction => e
 
-            message = e.message if e.is_a?(ModelException)
-            message = e.message[/DETAIL:(.*)/] || e.to_s
+            if e.is_a?(ModelException)
+              message = e.message
+              else
+                message = e.message[/DETAIL:(.*)/] || e.to_s
+            end
 
             status = 400
             response = {error: {msg: message, status_code: status}}

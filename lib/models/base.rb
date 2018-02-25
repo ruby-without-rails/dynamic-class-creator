@@ -1,5 +1,4 @@
 require 'yaml'
-require 'sequel'
 
 require_relative '../utils/discover_os'
 
@@ -34,13 +33,5 @@ module Models
         DATABASE.stream_all_queries = true
         puts '[Startup Info] - Postgresql streaming was activated.'
       end
-    end
-
-    # BaseModel is just an alias to Sequel::Model class:
-    class BaseModel < Sequel::Model
-      Sequel::Model.require_valid_table = false
-      Sequel::Model.plugin :force_encoding, 'UTF-8'
-      Sequel.split_symbols = true
-      Sequel.extension :postgres_schemata
     end
 end
