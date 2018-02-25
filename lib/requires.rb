@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'codecode/common/utils'
-
 # Smart requirer:
 current_dir = Dir.pwd
 folders = %w[exceptions helpers models utils]

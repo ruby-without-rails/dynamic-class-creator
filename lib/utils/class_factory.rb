@@ -58,6 +58,8 @@ module Utils::ClassFactory
 
       begin
         Object.const_set(dynamic_name, Class.new(Sequel::Model) {|klass|
+          set_dataset(connection[table_name.to_sym], inherited: false, require_valid_table: false)
+
           @db = connection
           @primary_key = primary_key_name
           @simple_table = table_name
@@ -66,7 +68,6 @@ module Utils::ClassFactory
           @table_name = table_name
           @table_schema = table_schema
 
-          set_dataset(connection[table_name.to_sym], inherited: false, require_valid_table: false)
 
           class << self
             define_method('find_by_id') {|value| self[value]}

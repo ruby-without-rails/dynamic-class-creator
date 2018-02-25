@@ -8,13 +8,10 @@ source 'http://rubygems.org'
 ruby '>= 2.1'
 gem 'bundler'
 
-gem 'codecode-common-utils', '~> 0.1.3'
-
 gem 'pg'
-gem 'sequel' , '< 5'
+gem 'sequel'
 gem 'sequel_enum'
 # A gem 'sequel_pg' não funciona em ambiente Windows.
-gem 'sequel-postgres-schemata'
 gem 'sequel_pg', require: 'sequel' unless Utils::DiscoverOS.os?.eql?(:windows)
 gem 'inflector'
 
@@ -24,7 +21,6 @@ gem 'sinatra-sequel'
 gem 'sinatra-authorization'
 gem 'sinatra-contrib'
 
-gem 'rack-parser', :require => 'rack/parser'
 
 group :test do
   gem 'faker'
