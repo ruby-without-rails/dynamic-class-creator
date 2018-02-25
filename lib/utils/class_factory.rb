@@ -2,7 +2,6 @@ require 'inflector'
 require 'sequel'
 
 module Utils::ClassFactory
-  include Models
   include Inflector
 
   # --EXIBINDO OS BANCOS DE DADOS:
