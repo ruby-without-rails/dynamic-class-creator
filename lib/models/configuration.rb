@@ -37,7 +37,7 @@ module Models
         routes = controller.routes
 
         # %w(POST GET DELETE OPTIONS PUT).each{|method|
-        #   const_set("#{method.downcase}_routes", routes[method].collect {|r| r.first.to_s})
+        #   local_variable_set("#{method.downcase}_routes".to_sym, routes[method].collect {|r| r.first.to_s})
         # }
 
         post_routes = routes['POST']&.collect {|r| r.first.to_s}

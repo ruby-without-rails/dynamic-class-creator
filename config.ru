@@ -9,6 +9,4 @@ require_relative 'api/app'
 
 ENV['TZ'] = 'America/Sao_Paulo'
 
-use Rack::Parser, :content_types => {'application/json'  => Proc.new { |body| ::MultiJson.decode body, :symbolize_keys => true }}
-
-Rack::Handler.default.run(App, Port: 9494, Host: '0.0.0.0')
+Rack::Handler.default.run(App, Port: 6669, Host: '0.0.0.0')

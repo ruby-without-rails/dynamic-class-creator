@@ -10,8 +10,6 @@ module Controllers
             }
           }
 
-
-
           c.namespace('/tables'){ |c|
             c.get('') {
               make_default_json_api(self) {
