@@ -1,6 +1,6 @@
-require 'codecode/common/utils'
 require_relative '../../lib/loadpath'
 require_relative '../../lib/models/base'
+require_relative '../../lib/models/configuration'
 require_relative '../../lib/utils/connection_factory'
 require_relative '../../lib/utils/class_factory'
 require 'requires'
@@ -38,7 +38,7 @@ describe 'Dynamic Class Creator' do
     conn = DB
   end
 
-  it 'deve realizar a conexao e criar as classes' do
+  it 'deve realizar a conexao e criar as classes dinamicamente' do
     result = ConnectionFactory.test_connection(yaml)
     expect(result).not_to be_nil
 

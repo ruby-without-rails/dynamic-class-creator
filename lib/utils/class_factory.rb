@@ -36,11 +36,10 @@ module Utils::ClassFactory
   def create_classes(connection, module_constant)
     table_info = scan_classes(connection)
     table_info.each {|t|
+      next if t[:table_name].eql?('configurations')
 
       table_name = t[:table_name]
       table_schema = t[:schema]
-
-      next if t[:table_name].eql?('configurations')
 
       table_constraints = get_table_constraints(connection, table_name)
       table_fks = get_table_foreign_keys(connection, table_name)
@@ -67,6 +66,9 @@ module Utils::ClassFactory
           @table_name = table_name
           @table_schema = table_schema
 
+          if table_fks
+
+          end
 
           class << self
             define_method('find_by_id') {|value| self[value]}

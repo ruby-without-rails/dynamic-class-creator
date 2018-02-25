@@ -1,4 +1,5 @@
 require 'yaml'
+require 'sequel'
 
 require_relative '../utils/discover_os'
 
