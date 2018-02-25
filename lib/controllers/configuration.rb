@@ -1,8 +1,3 @@
-#
-# Base requirement
-#
-require 'requires'
-
 module Controllers
   module ConfigurationCtrl
     class << self

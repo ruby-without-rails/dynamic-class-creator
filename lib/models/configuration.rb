@@ -1,5 +1,4 @@
 module Models
-  include Models::Base
 
   # @class [Configuration]
   class Configuration < BaseModel
@@ -37,16 +36,16 @@ module Models
       def list_apis(controller)
         routes = controller.routes
 
-        # %w(POST GET DELETE OPTIONS PUT PATCH).each{|method|
+        # %w(POST GET DELETE OPTIONS PUT).each{|method|
         #   const_set("#{method.downcase}_routes", routes[method].collect {|r| r.first.to_s})
         # }
 
-        post_routes = routes['POST'].collect {|r| r.first.to_s}
-        get_routes = routes['GET'].collect {|r| r.first.to_s}
-        delete_routes = routes['DELETE'].collect {|r| r.first.to_s}
-        options_routes = routes['OPTIONS'].collect {|r| r.first.to_s}
-        put_routes = routes['PUT'].collect {|r| r.first.to_s}
-        patch_routes = routes['PATCH'].collect {|r| r.first.to_s}
+        post_routes = routes['POST']&.collect {|r| r.first.to_s}
+        get_routes = routes['GET']&.collect {|r| r.first.to_s}
+        delete_routes = routes['DELETE']&.collect {|r| r.first.to_s}
+        options_routes = routes['OPTIONS']&.collect {|r| r.first.to_s}
+        put_routes = routes['PUT']&.collect {|r| r.first.to_s}
+        patch_routes = routes['PATCH']&.collect {|r| r.first.to_s}
 
         {post: post_routes, get: get_routes, delete: delete_routes, options: options_routes, put: put_routes, patch: patch_routes}
       end

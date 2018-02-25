@@ -51,7 +51,7 @@ class App < Sinatra::Application
   }
 
   helpers {
-    DATABASE = Models::Base::DATABASE
+    DATABASE = Models::DATABASE
 
     ClassMap = create_classes(DATABASE, Dynamics)
 

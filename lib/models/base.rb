@@ -4,7 +4,6 @@ require 'sequel'
 require_relative '../utils/discover_os'
 
 module Models
-  module Base
     # Database constants belong to this module namespace:
 
     private
@@ -27,7 +26,7 @@ module Models
     # Database access constants:
     DATABASE = load_db
 
-    unless Utils::DiscoverOSUtil.os?.eql?(:windows)
+    unless Utils::DiscoverOS.os?.eql?(:windows)
       if Sequel::Postgres.supports_streaming?
         # If streaming is supported, you can load the streaming support into the database:
         DATABASE.extension(:pg_streaming)
@@ -44,5 +43,4 @@ module Models
       Sequel.split_symbols = true
       Sequel.extension :postgres_schemata
     end
-  end
 end

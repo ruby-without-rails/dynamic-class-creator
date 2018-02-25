@@ -3,17 +3,17 @@ module Utils
     class << self
       def create_connection(connection_params)
         connection_params = {
-          host: connection_params[:host] || connection_params['host'],
-          user: connection_params[:user] || connection_params['user'],
-          password: connection_params[:password] || connection_params['password'],
-          database: connection_params[:database] || connection_params['database'],
-          port: connection_params[:port] || connection_params['port'] || 5432
+          host: connection_params[:host],
+          user: connection_params[:user],
+          password: connection_params[:password],
+          database: connection_params[:database],
+          port: connection_params[:port]
         }
 
         connection_params.each { |k, v| raise ModelException, "Null value at parameter #{k}" if v.nil? }
 
         if connection_params[:schemas]
-          schemas = ['public']
+          schemas = []
           schemas << connection_params[:schemas]
           schemas.flatten!
           schemas.uniq!

@@ -19,12 +19,12 @@ module Controllers
           end
         }
 
-        controller.options('*') {
-          response.headers['Allow'] = 'GET, POST, PUT, DELETE, OPTIONS'
-          response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token, AUTH_TOKEN, Auth-Token'
-          response.headers['Access-Control-Allow-Origin'] = '*'
-          200
-        }
+        # controller.options('*') {
+        #   response.headers['Allow'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        #   response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token, AUTH_TOKEN, Auth-Token'
+        #   response.headers['Access-Control-Allow-Origin'] = '*'
+        #   200
+        # }
       end
     end
   end
