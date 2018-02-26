@@ -50,7 +50,8 @@ module Helpers
     end
 
     def prepare_payload(raw_payload)
-      body_params = !raw_payload.empty? && !raw_payload.is_a?(IndifferentHash) && raw_payload.length >= 2 && raw_payload.match?(/\{*}/) ? ::MultiJson.decode(raw_payload, symbolize_keys: true) : raw_payload
+      body_params = !raw_payload.empty? && !raw_payload.is_a?(IndifferentHash) && raw_payload.length >= 2  \
+      && raw_payload.match?(/\{*}/) ? ::MultiJson.decode(raw_payload, symbolize_keys: true) : raw_payload
       raise ModelException.new 'Cannot parse Payload.' unless body_params
     end
 

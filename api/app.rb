@@ -1,21 +1,24 @@
+require_relative '../lib/loadpath'
+require 'models/base'
+
 require 'sinatra'
 require 'sinatra/cross_origin'
 require 'sinatra/contrib/all'
 require 'sinatra/sequel'
-
-require_relative '../lib/loadpath'
-require 'requires'
-require 'aliases'
-
-current_dir = Dir.pwd
-%w[controllers].each {|folder| Dir["#{current_dir}/lib/#{folder}/*.rb"].each {|file| require file}}
 
 Dynamics = ::Module.new
 
 # @class App
 class App < Sinatra::Application
   register Sinatra::SequelExtension, Sinatra::Namespace, Sinatra::CrossOrigin
+  extend Models
 
+  DATABASE = load_db
+
+  require 'requires'
+  require 'aliases'
+
+  %w[controllers].each {|folder| Dir["#{Dir.pwd}/lib/#{folder}/*.rb"].each {|file| require file}}
 
   Controllers.constants.each{|controller|
     module_name = Kernel.const_get('Controllers::?'.gsub('?', controller.to_s))
@@ -23,7 +26,6 @@ class App < Sinatra::Application
   }
 
   extend Utils::ClassFactory
-
 
   configure {
     set :environment, :development
@@ -58,8 +60,6 @@ class App < Sinatra::Application
   }
 
   helpers {
-    DATABASE = Models::DATABASE
-
     ClassMap = create_classes(DATABASE, Dynamics)
 
     Classes = get_classes(Dynamics)

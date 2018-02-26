@@ -1,38 +1,35 @@
 require 'yaml'
 require 'sequel'
+require 'sequel/adapters/postgresql'
 
 require_relative '../utils/discover_os'
 
 module Models
-    # Database constants belong to this module namespace:
+  # Database constants belong to this module namespace:
 
-    private
-
-    def self.load_config_file
-      file = 'database.conf.yml'
-      file_path = File.dirname(__FILE__) + "/../config/#{file}"
-      begin
-        YAML.safe_load(File.open(file_path))
-      rescue
-        raise "[Startup Info] - Config file [#{file}] not found in this directory [#{file_path}]"
-      end
+  def load_config_file
+    file = 'database.conf.yml'
+    file_path = File.dirname(__FILE__) + "/../config/#{file}"
+    begin
+      YAML.safe_load(File.open(file_path))
+    rescue
+      raise "[Startup Info] - Config file [#{file}] not found in this directory [#{file_path}]"
     end
+  end
 
-    def self.load_db
-      yaml = load_config_file
-      Sequel.postgres(yaml)
-    end
-
-    # Database access constants:
-    DATABASE = load_db
+  def load_db
+    yaml = load_config_file
 
     unless Utils::DiscoverOS.os?.eql?(:windows)
+      connection = Sequel.postgres(yaml)
       if Sequel::Postgres.supports_streaming?
         # If streaming is supported, you can load the streaming support into the database:
-        DATABASE.extension(:pg_streaming)
+        connection.extension(:pg_streaming)
         # If you want to enable streaming for all of a database's datasets, you can do the following:
-        DATABASE.stream_all_queries = true
+        connection.stream_all_queries = true
         puts '[Startup Info] - Postgresql streaming was activated.'
       end
+      connection
     end
+  end
 end
