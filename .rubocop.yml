@@ -1,2 +1,25 @@
 AllCops:
   TargetRubyVersion: 2.5
+  Naming/VariableName:
+    EnforcedStyle: snake_case
+    SupportedStyles:
+      - snake_case
+      - camelCase
+  Naming/VariableNumber:
+    EnforcedStyle: snake_case
+    SupportedStyles:
+      - snake_case
+      - normalcase
+      - non_integer
+  Style/CommentAnnotation:
+    Keywords:
+      - TODO
+      - FIXME
+      - OPTIMIZE
+      - HACK
+      - REVIEW
+  Style/RedundantReturn:
+  # When `true` allows code like `return x, y`.
+    AllowMultipleReturnValues: false
+    Metrics/LineLength:
+       Max: 160
