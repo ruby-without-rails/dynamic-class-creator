@@ -3,14 +3,14 @@ module Controllers
     class << self
       def included(controller)
 
-        controller.namespace('/api') { |c|
+        controller.namespace('/api') {|c|
           c.get('') {
             make_default_json_api(self) {
               {msg: 'Welcome To Dynamic Ruby Class Creator Apis'}
             }
           }
 
-          c.namespace('/tables'){ |c|
+          c.namespace('/tables') {|c|
             c.get('') {
               make_default_json_api(self) {
                 {database: App::DATABASE.opts[:database], schema: App::ClassMap.first[:schema], tables: App::ClassMap}
@@ -59,7 +59,7 @@ module Controllers
             }
           }
 
-          controller.namespace('/columns'){ |c|
+          controller.namespace('/columns') {|c|
             c.get('/:table_name') {|table_name|
               make_default_json_api(self, {}, table_name) {|mapped_class, _klass|
 

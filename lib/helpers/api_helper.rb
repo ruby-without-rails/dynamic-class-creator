@@ -14,39 +14,28 @@ module Helpers
     def make_default_json_api(api_instance, payload = {}, table_name = nil)
       request_method = api_instance.env['REQUEST_METHOD']
 
-      unless table_name.nil?
-        return ModelException.new("Forbidden access to: #{table_name}").to_response if table_name.eql?('configurations')
-        mapped_class = App::ClassMap.detect {|map| map[:table_name] == table_name}
-        return ModelException.new("Mapped class not found for name: #{table_name}").to_response unless mapped_class
-
-        the_class = class_from_string(mapped_class[:class_name])
-        return ModelException.new("Class not found for name: #{mapped_class[:class_name]}").to_response unless the_class
-      end
-
+      mapped_class, klass = verify_table(table_name)
 
       if payload.empty? && (request_method.eql?('GET') || request_method.eql?('DELETE') || request_method.eql?('OPTIONS'))
 
         begin
           api_instance.content_type CONTENT_TYPE
           status = 200
-          my_yield = table_name.nil? ? yield : yield(mapped_class, the_class)
+          my_yield = table_name.nil? ? yield : yield(mapped_class, klass)
           block_given? ? response = my_yield : response = {msg: 'Api not implemented yet.'}
         rescue ModelException => e
-          status = 400
-          response = {error: {msg: e.message, status_code: status}}
+          response = prepare_error_response(e)
         end
         [status, response.to_json.delete("\n")]
       else
 
         begin
           api_instance.content_type CONTENT_TYPE
-          body_params = !payload.empty? && !payload.is_a?(IndifferentHash) && payload.length >= 2 && payload.match?(/\{*}/) ? ::MultiJson.decode(payload, symbolize_keys: true) : payload
-          raise ModelException.new 'Cannot parse Payload.' unless payload
-
+          body_params = prepare_payload(payload)
           status = 200
 
           if block_given?
-            return_data = yield(body_params, status, mapped_class, the_class)
+            return_data = yield(body_params, status, mapped_class, klass)
             status = return_data[:status]
             response = return_data[:response]
           else
@@ -54,18 +43,32 @@ module Helpers
           end
         rescue ModelException, ConstraintViolation, UniqueConstraintViolation, CheckConstraintViolation,
             NotNullConstraintViolation, ForeignKeyConstraintViolation, MassAssignmentRestriction => e
-
-          if e.is_a?(ModelException)
-            message = e.message
-          else
-            message = e.message[/DETAIL:(.*)/] || e.to_s
-          end
-
-          status = 400
-          response = {error: {msg: message, status_code: status}}
+          response = prepare_error_response(e)
         end
         [status, response.to_json.delete("\n")]
       end
+    end
+
+    def prepare_payload(raw_payload)
+      body_params = !raw_payload.empty? && !raw_payload.is_a?(IndifferentHash) && raw_payload.length >= 2 && raw_payload.match?(/\{*}/) ? ::MultiJson.decode(raw_payload, symbolize_keys: true) : raw_payload
+      raise ModelException.new 'Cannot parse Payload.' unless body_params
+    end
+
+    def verify_table(table_name)
+      unless table_name.nil?
+        return ModelException.new("Forbidden access to: #{table_name}").to_response if table_name.eql?('configurations')
+        mapped_class = App::ClassMap.detect {|map| map[:table_name] == table_name}
+        return ModelException.new("Mapped class not found for name: #{table_name}").to_response unless mapped_class
+
+        klass = class_from_string(mapped_class[:class_name])
+        return ModelException.new("Class not found for name: #{mapped_class[:class_name]}").to_response unless klass
+        [mapped_class, klass]
+      end
+    end
+
+    def prepare_error_response(exception)
+      exception.is_a?(ModelException) ? message = exception.message : message = exception.message[/DETAIL:(.*)/] || exception.to_s
+      {error: {msg: message, status_code: 400}}
     end
   end
 
