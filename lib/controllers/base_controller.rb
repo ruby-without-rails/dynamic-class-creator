@@ -4,8 +4,8 @@ module Controllers
 
     class << self
       def included(controller)
-        controller.include Helpers::ApiHelper::ApiBuilder
-        controller.include Helpers::ApiHelper::ApiValidation
+        controller.include Helpers::ApiBuilder
+        controller.include Helpers::ApiValidation
 
         _current_dir = Dir.pwd
 
