@@ -42,14 +42,14 @@ module Controllers
             }
 
             c.post('/:table_name') {|table_name|
-              make_default_json_api(self, request.body.read&.delete("\n"), table_name) {|params, _status_code, _mapped_class, klass|
+              make_default_json_api(self, request.body.read, table_name) {|params, _status_code, _mapped_class, klass|
 
                 {status: 201, response: klass.create(params)&.values}
               }
             }
 
             c.put('/:table_name/:id') {|table_name, id|
-              make_default_json_api(self, request.body.read&.delete("\n"), table_name) {|params, _status_code, _mapped_class, klass|
+              make_default_json_api(self, request.body.read, table_name) {|params, _status_code, _mapped_class, klass|
 
                 object = klass[id]
                 raise ModelException.new "#{table_name} not found with id: #{id}" unless object
