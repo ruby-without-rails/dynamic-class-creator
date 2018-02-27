@@ -63,6 +63,9 @@ class App < Sinatra::Application
     ClassMap = create_classes(DATABASE, Dynamics)
     Classes = get_classes(Dynamics)
 
+    require 'extensions/models/dynamics_common'
+    include Extensions::DynamicsCommon
+
     def sample_method
       'sample method'
     end
