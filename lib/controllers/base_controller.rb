@@ -1,7 +1,6 @@
 module Controllers
   # module BaseController
   module BaseController
-
     class << self
       def included(controller)
         controller.include Helpers::ApiBuilder

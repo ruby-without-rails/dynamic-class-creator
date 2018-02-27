@@ -10,6 +10,8 @@ module Controllers
             }
           }
 
+          # <host>/api/tables
+          # Show tables
           c.namespace('/tables') {|c|
             c.get('') {
               make_default_json_api(self) {
@@ -17,6 +19,8 @@ module Controllers
               }
             }
 
+            # <host>/api/tables/<table_name>
+            # Return rows for table
             c.get('/:table_name') {|table_name|
               make_default_json_api(self, {}, table_name) {|mapped_class, klass|
 
@@ -24,6 +28,8 @@ module Controllers
               }
             }
 
+            # <host>/api/tables/<table_name>/<id>
+            # Return a row in current table
             c.get('/:table_name/:id') {|table_name, id|
               make_default_json_api(self, {}, table_name) {|mapped_class, klass|
 
@@ -32,6 +38,8 @@ module Controllers
             }
 
 
+            # <host>/api/tables/<table_name>/<id>
+            # Delete a row in current table
             c.delete('/:table_name/:id') {|table_name, id|
               make_default_json_api(self, {}, table_name) {|_mapped_class, klass|
 
@@ -41,6 +49,8 @@ module Controllers
               }
             }
 
+            # <host>/api/tables/<table_name>
+            # Persist values in current table
             c.post('/:table_name') {|table_name|
               make_default_json_api(self, request.body.read, table_name) {|params, _status_code, _mapped_class, klass|
 
@@ -48,6 +58,8 @@ module Controllers
               }
             }
 
+            # <host>/api/tables/<table_name>/<id>
+            # Update values in current table
             c.put('/:table_name/:id') {|table_name, id|
               make_default_json_api(self, request.body.read, table_name) {|params, _status_code, _mapped_class, klass|
 
@@ -59,7 +71,10 @@ module Controllers
             }
           }
 
+
           controller.namespace('/columns') {|c|
+            # <host>/api/columns/<table_name>
+            # Show possible columns in a current table
             c.get('/:table_name') {|table_name|
               make_default_json_api(self, {}, table_name) {|mapped_class, _klass|
 
