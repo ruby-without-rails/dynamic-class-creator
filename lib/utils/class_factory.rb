@@ -8,7 +8,7 @@ module Utils::ClassFactory
     str.split('::').inject(Object) {|mod, class_name| mod.const_get(class_name)}
   end
 
-  def create_classes(connection, module_constant)
+  def create_classes(connection, module_constant, singular_classes = false)
     table_info = scan_classes(connection)
     table_info.each {|t|
       next if t[:table_name].eql?('configurations')
@@ -24,7 +24,12 @@ module Utils::ClassFactory
 
       t[:columns_n_types] = table_columns(connection, table_name)
 
-      fixed_name = underscore(singularize(table_name))
+      if singular_classes
+        fixed_name = underscore(singularize(table_name))
+      else
+        fixed_name = underscore(table_name)
+      end
+
       dynamic_name = pascalize(fixed_name)
 
       classes = []
