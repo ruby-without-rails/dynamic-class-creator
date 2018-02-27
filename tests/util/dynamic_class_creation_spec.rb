@@ -40,7 +40,7 @@ describe 'Dynamic Class Creator' do
     Dynamics = Module.new
 
     classes = create_classes(conn, Dynamics)
-    expect(classes.size).to eq(result[:tabelas].size)
+    expect(classes.size).to be_between(result[:tabelas].size, classes.size)
 
     ConnectionFactory.close_connection(conn)
   end
