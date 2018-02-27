@@ -61,7 +61,6 @@ class App < Sinatra::Application
 
   helpers {
     ClassMap = create_classes(DATABASE, Dynamics)
-
     Classes = get_classes(Dynamics)
 
     def sample_method

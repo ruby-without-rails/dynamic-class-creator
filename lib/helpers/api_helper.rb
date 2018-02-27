@@ -58,7 +58,7 @@ module Helpers
 
     def verify_table(table_name)
       unless table_name.nil?
-        halt 400, {'Content-Type' => 'application/json'}, ModelException.new("Forbidden access to: #{table_name}").to_json if table_name.eql?('configurations')
+        halt 403, {'Content-Type' => 'application/json'}, ModelException.new("Forbidden access to: #{table_name}").to_json if table_name.eql?('configurations')
         mapped_class = App::ClassMap.detect {|map| map[:table_name] == table_name}
         halt 400, {'Content-Type' => 'application/json'}, ModelException.new("Mapped class not found for name: #{table_name}").to_json unless mapped_class
 
