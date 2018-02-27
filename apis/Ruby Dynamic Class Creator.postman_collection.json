@@ -1,0 +1,114 @@
+{
+	"info": {
+		"name": "Ruby Dynamic Class Creator",
+		"_postman_id": "5d8a2db8-65b8-998e-d92f-521045aea410",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "<host>/tables",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": "{{local}}/api/tables",
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "<host>/table/<table_name>/<reg_id>",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": 12345679\n}"
+				},
+				"url": "{{local}}/api/tables/authors/6",
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "<host>/table/<table_name>",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"author 1\"\n}"
+				},
+				"url": "{{local}}/api/tables/authors",
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "<host>/api",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": "{{local}}/api",
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "{{local}}/tables/<table_name>",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": "{{local}}/api/tables/authors",
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "<host>/tables/<table_name>/<reg_id>",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": "{{local}}/api/tables/bank/1",
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "<host>/api/routes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": "{{local}}/api/routes",
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "<host>/columns/<table_name>",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": "{{local}}/columns/authors",
+				"description": null
+			},
+			"response": []
+		}
+	]
+}
