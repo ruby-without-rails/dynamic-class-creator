@@ -58,12 +58,12 @@ module Helpers
 
     def verify_table(table_name)
       unless table_name.nil?
-        return ModelException.new("Forbidden access to: #{table_name}").to_response if table_name.eql?('configurations')
+        halt 400, {'Content-Type' => 'application/json'}, ModelException.new("Forbidden access to: #{table_name}").to_json if table_name.eql?('configurations')
         mapped_class = App::ClassMap.detect {|map| map[:table_name] == table_name}
-        return ModelException.new("Mapped class not found for name: #{table_name}").to_response unless mapped_class
+        halt 400, {'Content-Type' => 'application/json'}, ModelException.new("Mapped class not found for name: #{table_name}").to_json unless mapped_class
 
         klass = class_from_string(mapped_class[:class_name])
-        return ModelException.new("Class not found for name: #{mapped_class[:class_name]}").to_response unless klass
+        halt 400, {'Content-Type' => 'application/json'}, ModelException.new("Class not found for name: #{mapped_class[:class_name]}").to_json unless klass
         [mapped_class, klass]
       end
     end
