@@ -5,6 +5,7 @@ module Extensions
     Dynamics.constants.each {|klass_sym|
       klass = Kernel.const_get('Dynamics::?'.gsub('?', klass_sym.to_s))
       klass.class_eval {
+        # Do everything(whatever) you want here.
         include Inflector
         puts "Extending #{klass.name}"
 
