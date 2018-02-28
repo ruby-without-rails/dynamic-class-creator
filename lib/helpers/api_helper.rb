@@ -24,6 +24,7 @@ module Helpers
           my_yield = table_name.nil? ? yield : yield(mapped_class, klass)
           block_given? ? response = my_yield : response = {msg: 'Api not implemented yet.'}
         rescue ModelException => e
+          status = 400
           response = prepare_error_response(e)
         end
         [status, response.to_json.delete("\n")]
@@ -42,7 +43,8 @@ module Helpers
             response = {msg: 'Api not implemented yet.'}
           end
         rescue ModelException, ConstraintViolation, UniqueConstraintViolation, CheckConstraintViolation,
-            NotNullConstraintViolation, ForeignKeyConstraintViolation, MassAssignmentRestriction => e
+            NotNullConstraintViolation, ForeignKeyConstraintViolation, MassAssignmentRestriction, ValidationFailed => e
+          status = 400
           response = prepare_error_response(e)
         end
         [status, response.to_json.delete("\n")]

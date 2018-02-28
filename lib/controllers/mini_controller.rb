@@ -54,7 +54,7 @@ module Controllers
             c.post('/:table_name') {|table_name|
               make_default_json_api(self, request.body.read, table_name) {|params, _status_code, _mapped_class, klass|
 
-                {status: 201, response: klass.create(params)&.values}
+                {status: _status_code, response: klass.create(params)&.values}
               }
             }
 

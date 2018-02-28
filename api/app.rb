@@ -60,15 +60,14 @@ class App < Sinatra::Application
   }
 
   helpers {
-    ClassMap = create_classes(DATABASE, Dynamics)
-    Classes = get_classes(Dynamics)
-
-    require 'extensions/models/dynamics_common'
-    include Extensions::DynamicsCommon
-
     def sample_method
       'sample method'
     end
   }
 
+  ClassMap = create_classes(DATABASE, Dynamics, false)
+  Classes = get_classes(Dynamics)
+
+  require 'extensions/models/dynamics_common'
+  include Extensions::DynamicsCommon
 end
