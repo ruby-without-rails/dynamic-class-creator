@@ -1,7 +1,6 @@
 require 'yaml'
 require 'sequel'
 require 'sequel/adapters/postgresql'
-
 require_relative '../utils/discover_os'
 
 module Models

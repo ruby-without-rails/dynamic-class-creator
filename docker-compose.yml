@@ -8,10 +8,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5423:5432"
+      - "5432:5432"
     expose: 
       - "5432"
-      - "5423"
   ruby:
     image: ruby:2.5.0
     environment:
@@ -19,7 +18,7 @@ services:
       RUBYLIB: ./lib
       DATABASE_URL_LOCAL: postgres://postgres:postgres@localhost:5422/postgres
     build: .
-    command: rackup config.ru -E DEV
+    command: rackup config.ru -E $RACK_ENV
     ports:
       - "9595:9595"
     depends_on:

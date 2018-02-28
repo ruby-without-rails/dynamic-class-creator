@@ -17,14 +17,14 @@ module Utils::ClassFactory
       next if t[:table_name].eql?('configurations')
 
       name = t[:table_name]
-      schema = t[:schema]
+      _schema = t[:schema]
 
       constraints = table_constraints(connection, name)
       foreign_keys = table_foreign_keys(connection, name)
       fields = scan_fields(connection, name)
       t[:constraints] = constraints.map {|tc| {type: tc[:constraint_type], name: tc[:constraint_name]}}
       t[:foreign_keys] = foreign_keys
-      primary_key_name = t[:constraints].detect {|tc| tc[:type].eql?('PRIMARY KEY')}[:name] rescue nil
+      _primary_key_name = t[:constraints].detect {|tc| tc[:type].eql?('PRIMARY KEY')}[:name] rescue nil
       t[:scanned_fields] = fields
       t[:columns_n_types] = table_columns(connection, name)
 

@@ -21,9 +21,7 @@ module Utils
           schemas.uniq!
         end
 
-
         Sequel.connect(connection_params, adapter: 'postgres', search_path: schemas)
-
       end
 
       def close_connection(connection)

@@ -15,7 +15,7 @@ module Controllers
           c.namespace('/tables') {|c|
             c.get('') {
               make_default_json_api(self) {
-                {database: App::DATABASE.opts[:database], schema: App::ClassMap.first[:schema], tables: App::ClassMap}
+                {database: App::DATASOURCE.opts[:database], schema: App::ClassMap.first[:schema], tables: App::ClassMap}
               }
             }
 

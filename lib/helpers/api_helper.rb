@@ -12,6 +12,8 @@ module Helpers
     include Utils::ClassFactory
 
     CONTENT_TYPE = 'application/json;charset=utf-8'
+    RESCUES = [ModelException, UniqueConstraintViolation, ConstraintViolation, CheckConstraintViolation,
+               NotNullConstraintViolation, ForeignKeyConstraintViolation, MassAssignmentRestriction, ValidationFailed].freeze
 
     def make_default_json_api(api_instance, payload = {}, table_name = nil)
       request_method = api_instance.env['REQUEST_METHOD']
@@ -44,8 +46,7 @@ module Helpers
           else
             response = { msg: 'Api not implemented yet.' }
           end
-        rescue ModelException, ConstraintViolation, UniqueConstraintViolation, CheckConstraintViolation,
-               NotNullConstraintViolation, ForeignKeyConstraintViolation, MassAssignmentRestriction, ValidationFailed => e
+        rescue RESCUES => e
           status = 400
           response = prepare_error_response(e)
         end

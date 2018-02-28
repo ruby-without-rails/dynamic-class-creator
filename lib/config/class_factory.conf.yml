@@ -1,0 +1,2 @@
+# if name conflicts = true, don't singularize class names
+name_conflicts: true
