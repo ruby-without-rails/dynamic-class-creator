@@ -11,10 +11,11 @@ module Models
 
     class << self
       def save_configuration(key, value)
-        c = new
-        c.key = key
-        c.value = value
-        c.save
+        new{ |c|
+          c.key = key
+          c.value = value
+          c.save
+        }
       end
 
       def app_version

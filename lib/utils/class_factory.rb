@@ -8,6 +8,9 @@ module Utils::ClassFactory
     str.split('::').inject(Object) {|mod, class_name| mod.const_get(class_name)}
   end
 
+  # @param [Sequel.Postgres] connection
+  # @param [Object] module_constant module namespace for group and organize auto-generated classes
+  # @param [Object] name_conflicts names in db conflicts with kernel classes?
   def create_classes(connection, module_constant, name_conflicts = true)
     table_info = scan_classes(connection)
     table_info.each {|t|
@@ -25,11 +28,7 @@ module Utils::ClassFactory
       t[:scanned_fields] = fields
       t[:columns_n_types] = table_columns(connection, name)
 
-      if name_conflicts
-        fixed_name = underscore(name)
-      else
-        fixed_name = underscore(singularize(name))
-      end
+      name_conflicts ? fixed_name = underscore(name) : fixed_name = underscore(singularize(name))
 
       dynamic_name = pascalize(fixed_name)
 

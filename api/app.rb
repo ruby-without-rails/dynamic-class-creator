@@ -20,8 +20,8 @@ class App < Sinatra::Application
 
   %w[controllers].each {|folder| Dir["#{Dir.pwd}/lib/#{folder}/*.rb"].each {|file| require file}}
 
-  Controllers.constants.each{|controller|
-    module_name = Kernel.const_get('Controllers::?'.gsub('?', controller.to_s))
+  Controllers.constants.each{|ctrl_sym|
+    module_name = Kernel.const_get('Controllers::?'.gsub('?', ctrl_sym.to_s))
     include module_name
   }
 
