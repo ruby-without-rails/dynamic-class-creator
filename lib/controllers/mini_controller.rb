@@ -52,7 +52,11 @@ module Controllers
             # <host>/api/tables/<table_name>
             # Persist values in current table
             c.post('/:table_name') {|table_name|
-              make_default_json_api(instance: self, payload: request.body.read, table_name: table_name) {|params, _status_code, _mapped_class, klass|
+
+              # Lambda Sample for change default error handler
+              on_error = ->(exception) {{exception: exception}}
+
+              make_default_json_api(instance: self, payload: request.body.read, table_name: table_name, on_error: on_error) {|params, _status_code, _mapped_class, klass|
 
                 {status: _status_code, response: klass.create(params)&.values}
               }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'yaml'
 require 'sequel'
 require 'sequel/adapters/postgresql'
@@ -11,7 +12,7 @@ module Models
     file_path = File.dirname(__FILE__) + "/../config/#{file}"
     begin
       YAML.safe_load(File.open(file_path))
-    rescue
+    rescue StandardError
       raise "[Startup Info] - Config file [#{file}] not found in this directory [#{file_path}]"
     end
   end

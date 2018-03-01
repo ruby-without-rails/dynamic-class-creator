@@ -12,6 +12,7 @@ module Helpers
     include Utils::ClassFactory
 
     CONTENT_TYPE = 'application/json;charset=utf-8'
+    NOT_IMPLEMENTED_YET = { msg: 'Api not implemented yet.' }.freeze
 
     def make_default_json_api(options = {})
       api_instance = options[:instance]
@@ -28,40 +29,42 @@ module Helpers
           api_instance.content_type CONTENT_TYPE
           status = 200
           my_yield = table_name.nil? ? yield : yield(mapped_class, klass)
-          block_given? ? response = my_yield : response = {msg: 'Api not implemented yet.'}
+          block_given? ? response = my_yield : response = NOT_IMPLEMENTED_YET
         rescue ModelException => e
           status = 400
-          response = prepare_error_response(e)
+          lambda = options[:on_error]
+          response = lambda.nil? ? prepare_error_response(e) : lambda.call(e)
         end
         [status, response.to_json.delete("\n")]
       else
 
         begin
           api_instance.content_type CONTENT_TYPE
-          body_params = prepare_payload(payload)
           status = 200
+          body_params = prepare_payload(payload)
 
           if block_given?
             return_data = yield(body_params, status, mapped_class, klass)
             status = return_data[:status]
             response = return_data[:response]
           else
-            response = {msg: 'Api not implemented yet.'}
+            response = NOT_IMPLEMENTED_YET
           end
         rescue ModelException, UniqueConstraintViolation, ConstraintViolation, CheckConstraintViolation,
             NotNullConstraintViolation, ForeignKeyConstraintViolation, MassAssignmentRestriction, ValidationFailed => e
           status = 400
-          response = prepare_error_response(e)
+          lambda = options[:on_error]
+          response = lambda.nil? ? prepare_error_response(e) : lambda.call(e)
         end
         [status, response.to_json.delete("\n")]
       end
     end
 
+    private
+
     def prepare_payload(raw_payload)
-      body_params = !raw_payload.empty? && !raw_payload.is_a?(IndifferentHash) && raw_payload.length >= 2  \
-       && raw_payload.match?(/{*}/) ? ::MultiJson.decode(raw_payload, symbolize_keys: true) : raw_payload
-      raise ModelException, 'Cannot parse Payload.' unless body_params
-      body_params
+      raise ModelException, 'Cannot parse Payload.' if raw_payload.nil? || !raw_payload.is_a?(String) || !(raw_payload.length >= 2) || !raw_payload.match?(/{*}/)
+      ::MultiJson.decode(raw_payload, symbolize_keys: true)
     end
 
     def verify_table(table_name)

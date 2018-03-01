@@ -11,7 +11,7 @@ module Models
 
     class << self
       def save_configuration(key, value)
-        new{ |c|
+        new { |c|
           c.key = key
           c.value = value
           c.save
@@ -19,8 +19,7 @@ module Models
       end
 
       def app_version
-        conf = where(key: 'version').first
-        conf.values
+        where(key: 'version').first&.values
       end
 
       def get_configuration(key)
