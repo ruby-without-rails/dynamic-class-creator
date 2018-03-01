@@ -106,5 +106,5 @@ module Utils::ClassFactory
   SHOW_FOREIGN_KEYS = "SELECT tc.constraint_name , tc.table_name as source_table, kcu.column_name as source_column, ccu.table_name AS target_table, ccu.column_name AS target_column FROM information_schema.table_constraints AS tc JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name WHERE constraint_type = 'FOREIGN KEY' AND tc.table_name='?';".freeze
 
   # -- QUERY PARA VALIDAÇÃO DE CAMPOS
-  SHOW_FIELDS = "SELECT column_name, is_nullable, character_maximum_length, is_updatable FROM information_schema.columns WHERE table_name = '?';".freeze
+  SHOW_FIELDS = "SELECT column_name, data_type, is_nullable, character_maximum_length, is_updatable FROM information_schema.columns WHERE table_name = '?';".freeze
 end
