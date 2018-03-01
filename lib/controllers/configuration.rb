@@ -5,19 +5,19 @@ module Controllers
 
         controller.namespace('/api') {|c|
           c.get('/configuration/version') {
-            make_default_json_api(self) {
+            make_default_json_api(instance: self) {
               Configuration.app_version
             }
           }
 
           c.get('/configuration') {
-            make_default_json_api(self) {
+            make_default_json_api(instance: self) {
               Configuration.list_configurations
             }
           }
 
           c.get('/routes') {
-            make_default_json_api(self) {
+            make_default_json_api(instance: self) {
               Configuration.list_apis(c)
             }
           }
