@@ -86,6 +86,28 @@ module Controllers
               }
             }
           }
+
+          controller.namespace('/required') {|c|
+            # <host>/api/required/<table_name>
+            # Show required columns in a current table
+            c.get('/:table_name') {|table_name|
+              make_default_json_api(instance: self, payload: nil, table_name: table_name) {|mapped_class, _klass|
+
+                {"#{mapped_class[:table_name]}": mapped_class[:required]}
+              }
+            }
+          }
+
+          controller.namespace('/optional') {|c|
+            # <host>/api/optional/<table_name>
+            # Show optional columns in a current table
+            c.get('/:table_name') {|table_name|
+              make_default_json_api(instance: self, payload: nil, table_name: table_name) {|mapped_class, _klass|
+
+                {"#{mapped_class[:table_name]}": mapped_class[:optional]}
+              }
+            }
+          }
         }
       end
     end
