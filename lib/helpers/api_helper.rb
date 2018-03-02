@@ -12,7 +12,7 @@ module Helpers
     include Utils::ClassFactory
 
     CONTENT_TYPE = 'application/json;charset=utf-8'
-    NOT_IMPLEMENTED_YET = { msg: 'Api not implemented yet.' }.freeze
+    NOT_IMPLEMENTED_YET = {msg: 'Api not implemented yet.'}.freeze
 
     def make_default_json_api(options = {})
       api_instance = options[:instance]
@@ -24,7 +24,6 @@ module Helpers
       mapped_class, klass = verify_table(table_name)
 
       if payload.nil? && (%w[OPTIONS DELETE GET].index(request_method) != nil)
-
         begin
           api_instance.content_type CONTENT_TYPE
           status = 200
@@ -35,9 +34,7 @@ module Helpers
           lambda = options[:on_error]
           response = lambda.nil? ? prepare_error_response(e) : lambda.call(e)
         end
-        [status, response.to_json.delete("\n")]
       else
-
         begin
           api_instance.content_type CONTENT_TYPE
           status = 200
@@ -56,8 +53,8 @@ module Helpers
           lambda = options[:on_error]
           response = lambda.nil? ? prepare_error_response(e) : lambda.call(e)
         end
-        [status, response.to_json.delete("\n")]
       end
+      [status, response.to_json.delete("\n")]
     end
 
     private

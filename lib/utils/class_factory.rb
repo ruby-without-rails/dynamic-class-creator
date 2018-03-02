@@ -42,6 +42,7 @@ module Utils::ClassFactory
       begin
         Object.const_set(dynamic_name, Class.new(Sequel::Model) {|klass|
           set_dataset(connection[name.to_sym], inherited: false, require_valid_table: false)
+          connection.extension(:pagination)
           %i[validation_helpers column_conflicts dirty json_serializer auto_validations].each {|sym| plugin sym}
 
           class << self

@@ -37,6 +37,17 @@ module Controllers
               }
             }
 
+            # <host>/api/tables/<table_name>/<page>/<limit>
+            # Return a list of current table in pagination mode
+            c.get('/:table_name/:page/:limit') {|table_name, page, limit|
+              make_default_json_api(instance: self, payload: nil, table_name: table_name) {|mapped_class, klass|
+
+                pagination = {total: klass.count, page: page.to_i, limit: limit.to_i}
+
+                {"#{mapped_class[:table_name]}": klass.dataset.paginate(page.to_i, limit.to_i)}.merge(pagination)
+              }
+            }
+
 
             # <host>/api/tables/<table_name>/<id>
             # Delete a row in current table
@@ -77,7 +88,7 @@ module Controllers
 
 
           controller.namespace('/columns') {|c|
-            # <host>/api/columns/<table_name>
+            # <host>/columns/<table_name>
             # Show possible columns in a current table
             c.get('/:table_name') {|table_name|
               make_default_json_api(instance: self, payload: nil, table_name: table_name) {|mapped_class, _klass|
@@ -88,7 +99,7 @@ module Controllers
           }
 
           controller.namespace('/required') {|c|
-            # <host>/api/required/<table_name>
+            # <host>/required/<table_name>
             # Show required columns in a current table
             c.get('/:table_name') {|table_name|
               make_default_json_api(instance: self, payload: nil, table_name: table_name) {|mapped_class, _klass|
@@ -99,7 +110,7 @@ module Controllers
           }
 
           controller.namespace('/optional') {|c|
-            # <host>/api/optional/<table_name>
+            # <host>/optional/<table_name>
             # Show optional columns in a current table
             c.get('/:table_name') {|table_name|
               make_default_json_api(instance: self, payload: nil, table_name: table_name) {|mapped_class, _klass|
