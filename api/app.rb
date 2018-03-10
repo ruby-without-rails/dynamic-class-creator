@@ -1,65 +1,75 @@
+require_relative '../lib/loadpath'
+require 'models/base'
+
+require 'yaml'
 require 'sinatra'
+require 'sinatra/cross_origin'
 require 'sinatra/contrib/all'
 require 'sinatra/sequel'
-require 'json'
 
-require_relative '../lib/loadpath'
-require_relative '../lib/models/base'
-require_relative '../lib/requires'
-require_relative '../lib/aliases'
-require_relative '../lib/exceptions/model_exception'
-require_relative '../lib/exceptions/unexpected_param_exception'
-require_relative '../lib/controllers/base_controller'
-require_relative '../lib/controllers/mini_controller'
+Dynamics = ::Module.new
 
 # @class App
 class App < Sinatra::Application
-  register Sinatra::SequelExtension, Sinatra::Namespace
+  register Sinatra::SequelExtension, Sinatra::Namespace, Sinatra::CrossOrigin, Sinatra::ConfigFile
+  config_file File.join("#{Dir.pwd}/lib/config/rack.conf.yml")
+  extend Models
 
-  include Controller::BaseController
-  extend Controller::MiniController
+  DATASOURCE = load_db
+  CLASS_FACTORY_OPTIONS = YAML.safe_load(File.open("#{Dir.pwd}/lib/config/class_factory.conf.yml"))
 
-  configure {
-    set :environment, :development
-    set :bind, '0.0.0.0'
-    set :port, 9494
+  require 'requires'
+  require 'aliases'
 
-    set :raise_errors, true
-    set :show_exceptions, true
+  %w[controllers].each {|folder| Dir["#{Dir.pwd}/lib/#{folder}/*.rb"].each { |file| require file}}
 
-    enable :cross_origin
-    enable :reloader
-
-    set :root, File.dirname(__FILE__)
-    set :public_folder, Proc.new { File.join(root, '../', 'public') }
+  Controllers.constants.each{|ctrl_sym|
+    module_name = Kernel.const_get('Controllers::?'.gsub('?', ctrl_sym.to_s))
+    include module_name
   }
 
-  before do
+  extend Utils::ClassFactory
+
+  configure {
+    set :environment, settings.environment
+    set server: 'webrick'
+    set :raise_errors, settings.raise_errors
+    set :show_exceptions, settings.show_exceptions
+    set :root, File.dirname(__FILE__)
+    set :public_folder, File.join(root, '../', 'public')
+  }
+
+  configure(:development) {
+    enable :cross_origin
+    set :allow_origin, :any
+    set :allow_methods, %i[get post put delete options]
+    set :allow_credentials, true
+    set :max_age, '1728000'
+    set :expose_headers, %w[Authorization Content-Type Accept X-User-Email X-Auth-Token AUTH_TOKEN Auth-Token]
+  }
+
+  before {
     content_type :html, 'charset' => 'utf-8'
     content_type :json, 'charset' => 'utf-8'
-
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    headers['Access-Control-Allow-Origin'] = '*'
-    headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-    headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token, KUADRO_AUTH_TOKEN, Kuadro-Auth-Token'
-  end
+  }
 
   after {}
 
   error(500, 400) {
-    # Log uncaught errors with Sentry, sending env variables
-    # and the request body
     extra = env
-    extra['REQUEST_BODY'] = request.body
-    puts extra
+    extra['REQUEST_BODY'] = @request.body.read
+    warn extra
   }
 
-  options('*') {
-    response.headers['Allow'] = 'GET, POST, PUT, DELETE, OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token, KUADRO_AUTH_TOKEN, Kuadro-Auth-Token'
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    200
+  helpers {
+    def sample_method
+      'sample method'
+    end
   }
 
-  run!
+  ClassMap = create_classes(DATASOURCE, Dynamics, CLASS_FACTORY_OPTIONS['name_conflicts'])
+  Classes = get_classes(Dynamics)
+
+  require 'extensions/models/dynamics_common'
+  include Extensions::DynamicsCommon
 end

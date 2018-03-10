@@ -6,22 +6,21 @@ require_relative 'lib/utils/discover_os'
 
 source 'http://rubygems.org'
 ruby '>= 2.1'
-
-gem 'codecode-common-utils', '~> 0.1.3'
+gem 'bundler'
 
 gem 'pg'
-gem 'sequel' , '< 5'
+gem 'sequel'
 gem 'sequel_enum'
 # A gem 'sequel_pg' não funciona em ambiente Windows.
-gem 'sequel-postgres-schemata'
-gem 'sequel_pg', require: 'sequel' unless Utils::DiscoverOSUtil.os?.eql?(:windows)
+gem 'sequel_pg', require: 'sequel' unless Utils::DiscoverOS.os?.eql?(:windows)
+gem 'inflector'
 
-
-gem 'pg'
 gem 'sinatra'
+gem 'sinatra-cross_origin'
 gem 'sinatra-sequel'
 gem 'sinatra-authorization'
 gem 'sinatra-contrib'
+
 
 group :test do
   gem 'faker'

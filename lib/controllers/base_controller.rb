@@ -1,25 +1,22 @@
-require 'codecode/common/utils'
-require_relative '../utils/class_factory'
-
-
-Dynamics = ::Module.new
-
-module Controller
+module Controllers
   # module BaseController
   module BaseController
-    extend Utils::ClassFactory
-    include Utils::ClassFactory
-
-    DB = Models::Base::DB
-
-    ClassMap = create_classes(DB, Dynamics)
-
-    Classes = get_classes(Dynamics)
-
     class << self
       def included(controller)
-        controller.include Helpers::ApiHelper::ApiBuilder
-        controller.include Helpers::ApiHelper::ApiValidation
+        controller.include Helpers::ApiBuilder
+        controller.include Helpers::ApiValidation
+
+        _current_dir = Dir.pwd
+
+        controller.get('/') {
+          content_type 'text/html; charset=utf-8'
+          file_path = File.join(settings.public_folder, 'index.html')
+          if File.exist?(file_path) && File.readable?(file_path)
+            send_file file_path
+          else
+            'File not Found!'
+          end
+        }
       end
     end
   end

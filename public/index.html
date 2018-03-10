@@ -1,3 +1,4 @@
+<!doctype html>
 <html lang="en" ng-app="myApp">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -5,85 +6,61 @@
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <title>Ruby Dynamics</title>
 </head>
 <body ng-cloak ng-controller="appCtrl">
 <!--
   Your HTML content here
 -->
-
 <md-fab-toolbar md-open="demo.isOpen" count="demo.count"
                 md-direction="{{demo.selectedDirection}}">
     <md-fab-trigger class="align-with-text">
         <md-button aria-label="menu" class="md-fab md-primary">
-            <md-icon md-svg-src="img/icons/ic_menu_white_48px.svg"></md-icon>
+            <md-icon md-svg-src="img/icons/white/svg/ic_menu_white_48px.svg"></md-icon>
+            <md-tooltip md-direction="bottom">More Options</md-tooltip>
         </md-button>
     </md-fab-trigger>
 
     <md-toolbar>
         <md-fab-actions class="md-toolbar-tools">
             <md-button aria-label="comment" class="md-icon-button">
-                <md-icon md-svg-src="img/icons/ic_comment_white_48px.svg"></md-icon>
+                <md-icon md-svg-src="img/icons/white/svg/table.svg"></md-icon>
             </md-button>
             <md-button aria-label="label" class="md-icon-button">
-                <md-icon md-svg-src="img/icons/ic_label_white_48px.svg"></md-icon>
+                <md-icon md-svg-src="img/icons/white/svg/th-list.svg"></md-icon>
             </md-button>
             <md-button aria-label="photo" class="md-icon-button">
-                <md-icon md-svg-src="img/icons/ic_photo_white_48px.svg"></md-icon>
+                <md-icon md-svg-src="img/icons/white/svg/ic_photo_white_48px.svg"></md-icon>
             </md-button>
         </md-fab-actions>
     </md-toolbar>
 </md-fab-toolbar>
 
-<div ng-cloak layout-gt-sm="row" layout="column">
+<div layout="row" layout-align="center center">
+    <div ng-cloak layout-gt-lg="row" layout="column">
 
-    <div flex-gt-sm="50" flex>
+        <div flex-gt-lg="100" flex>
 
-        <md-toolbar layout="row" class="md-hue-3">
-            <div class="md-toolbar-tools">
-                <span>Tables from {{database}}</span>
-            </div>
-        </md-toolbar>
+            <md-toolbar layout="row" class="md-hue-3">
+                <div class="md-toolbar-tools">
+                    <span>Tables from {{database}}</span>
+                </div>
+            </md-toolbar>
 
-        <md-content>
-            <md-list flex>
-                <md-subheader class="md-no-sticky">{{countOfTables}} tables in {{schema}} schema</md-subheader>
-                <md-list-item class="md-3-line" ng-repeat="item in tables" ng-click="null">
-                    <img ng-src="{{icon}}?{{$index}}" class="md-avatar" alt="{{item.who}}"/>
-                    <div class="md-list-item-text" layout="column">
-                        <h3>{{ item.table_name }}</h3>
-                        <h4>{{ item.schema }}</h4>
-                        <p>{{ item.class_name }}</p>
-                    </div>
-                </md-list-item>
-                <md-divider></md-divider>
-            </md-list>
-        </md-content>
-    </div>
-
-    <md-divider></md-divider>
-
-    <div flex-gt-sm="50" flex>
-
-        <md-toolbar layout="row" class="md-hue-3">
-            <div class="md-toolbar-tools">
-                <span>Tables from {{database}}</span>
-            </div>
-        </md-toolbar>
-
-        <md-content>
-            <md-list flex>
-                <md-subheader class="md-no-sticky">{{countOfTables}} tables in {{schema}} schema</md-subheader>
-                <md-list-item class="md-3-line" ng-repeat="item in tables" ng-click="null">
-                    <img ng-src="{{icon}}?{{$index}}" class="md-avatar" alt="{{item.who}}"/>
-                    <div class="md-list-item-text" layout="column">
-                        <h3>{{ item.table_name }}</h3>
-                        <h4>{{ item.schema }}</h4>
-                        <p>{{ item.class_name }}</p>
-                    </div>
-                </md-list-item>
-                <md-divider></md-divider>
-            </md-list>
-        </md-content>
+            <md-content>
+                <md-list flex>
+                    <md-subheader class="md-no-sticky">{{countOfTables}} tables in {{schema}} schema</md-subheader>
+                    <md-list-item class="md-3-line" ng-repeat="item in tables" ng-click="null">
+                        <img ng-src="{{icon}}?{{$index}}" class="md-avatar" alt="{{item.who}}"/>
+                        <div class="md-list-item-text" layout="column">
+                            <h3>{{ item.table_name }}</h3>
+                            <h4>{{ item.schema }}</h4>
+                            <p>{{ item.class_name }}</p>
+                        </div>
+                    </md-list-item>
+                </md-list>
+            </md-content>
+        </div>
     </div>
 </div>
 

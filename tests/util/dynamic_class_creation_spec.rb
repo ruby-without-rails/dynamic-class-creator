@@ -1,49 +1,27 @@
-require '../../lib/loadpath'
-require '../../lib/models/base'
-require '../../lib/requires'
-require '../../lib/aliases'
+require_relative '../../lib/loadpath'
+require_relative '../../lib/models/base'
+require_relative '../../lib/utils/connection_factory'
+require_relative '../../lib/utils/class_factory'
+require 'requires'
 
 require 'rspec'
 
 describe 'Dynamic Class Creator' do
 
+  include Models
   include Utils::ClassFactory
 
   conn = nil
-
-  # Database constants belong to this module namespace:
-  private
-  def self.load_config_file
-    file = 'database.conf.yml'
-    file_path = File.dirname(__FILE__) + "/../../lib/config/#{file}"
-    YAML::load(File.open(file_path)) rescue fail "[Startup Info] - Arquivo de configuração [#{file}] não encontrado no diretório [#{file_path}]"
-  end
-
-  def self.load_db
-    yaml = load_config_file
-
-    case ENV['RACK_ENV']
-      when 'HMG' then
-        fail 'Not implemented yet!'
-      when 'PROD' then
-        fail 'Not implemented yet!'
-      else
-        Sequel.postgres(yaml)
-    end
-  end
-
-
-  # Database access constants:
-  DB = load_db
-
-  yaml = load_config_file
+  yaml = nil
 
   before do
-    # conn = ConnectionFactory.criar_conexao(yaml)
-    conn = DB
+    conn = load_db
+    require '../../lib/models/configuration'
+    require 'aliases'
+    yaml = load_config_file
   end
 
-  it 'deve realizar a conexao e criar as classes' do
+  it 'deve realizar a conexao e criar as classes dinamicamente' do
     result = ConnectionFactory.test_connection(yaml)
     expect(result).not_to be_nil
 
@@ -62,7 +40,7 @@ describe 'Dynamic Class Creator' do
     Dynamics = Module.new
 
     classes = create_classes(conn, Dynamics)
-    expect(classes.size).to eq(result[:tabelas].size)
+    expect(classes.size).to be_between(result[:tabelas].size, classes.size)
 
     ConnectionFactory.close_connection(conn)
   end

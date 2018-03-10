@@ -1,8 +1,8 @@
 require 'rbconfig'
 
 module Utils
-  # Module DiscoverOSUtil
-  module DiscoverOSUtil
+  # Module DiscoverOS
+  module DiscoverOS
     class << self
       def os?
         case os_string
@@ -10,7 +10,7 @@ module Utils
           when /darwin|mac os/ then :macosx
           when /linux/ then :linux
           when /solaris|bsd/ then :unix
-          else raise StandardError, "Sistema Operacional não identificado: #{self.os_string.inspect}"
+          else raise StandardError, "Operational system not defined: #{os_string}"
         end
       end
 

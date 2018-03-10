@@ -1,8 +1,7 @@
-require 'codecode/common/utils'
+# frozen_string_literal: true
 
+# Smart requirer:
+current_dir = Dir.pwd
+folders = %w[exceptions helpers models utils]
 
-# Utils import:
-require 'utils/class_factory'
-require 'utils/discover_os'
-require 'utils/connection_factory'
-require 'helpers/api_helper'
+folders.each{|folder| Dir["#{current_dir}/lib/#{folder}/*.rb"].each{|file| require file}}

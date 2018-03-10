@@ -9,7 +9,6 @@ module Migration
     # @return [Object]
     def change
 
-
     end
   end
 end

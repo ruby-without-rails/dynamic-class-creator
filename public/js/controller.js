@@ -3,14 +3,30 @@
  */
 var myApp = angular.module('myApp', ['ngMaterial']);
 
+myApp.config(function ($mdThemingProvider) {
+
+    // Extend the red theme with a different color and make the contrast color black instead of white.
+    // For example: raised button text will be black instead of white.
+    var neonRedMap = $mdThemingProvider.extendPalette('red', {
+        '500': '#ff0000',
+        'contrastDefaultColor': 'dark'
+    });
+
+    // Register the new color palette map with the name <code>neonRed</code>
+    $mdThemingProvider.definePalette('neonRed', neonRedMap);
+
+    // Use that theme for the primary intentions
+    $mdThemingProvider.theme('default')
+        .primaryPalette('neonRed');
+
+});
+
 myApp.controller('appCtrl', function ($scope, $http) {
-    var baseUrl = 'http://localhost:9494/api';
+
+    var loc = window.location;
+    var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "") + '/api';
 
     $scope.icon = 'img/60.png';
-    $scope.tables = [];
-    $scope.database = "";
-    $scope.schema = "";
-    $scope.countOfTables = 0;
 
     $http({method: 'GET', url: baseUrl + '/tables'})
         .then(function (returnData) {
