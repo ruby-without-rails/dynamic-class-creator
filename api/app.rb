@@ -6,6 +6,8 @@ require 'sinatra'
 require 'sinatra/cross_origin'
 require 'sinatra/contrib/all'
 require 'sinatra/sequel'
+require 'rack'
+require 'rack/contrib'
 
 Dynamics = ::Module.new
 
@@ -66,6 +68,9 @@ class App < Sinatra::Application
       'sample method'
     end
   }
+
+  use Rack::PostBodyContentTypeParser
+
 
   ClassMap = create_classes(DATASOURCE, Dynamics, CLASS_FACTORY_OPTIONS['name_conflicts'])
   Classes = get_classes(Dynamics)
