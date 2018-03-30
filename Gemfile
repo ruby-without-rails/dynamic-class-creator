@@ -11,10 +11,11 @@ gem 'bundler'
 gem 'pg'
 gem 'sequel'
 gem 'sequel_enum'
-# A gem 'sequel_pg' não funciona em ambiente Windows.
+# gem 'sequel_pg' not work's in Windows.
 gem 'sequel_pg', require: 'sequel' unless Utils::DiscoverOS.os?.eql?(:windows)
 gem 'inflector'
-
+gem 'rack'
+gem 'rack-contrib'
 gem 'sinatra'
 gem 'sinatra-cross_origin'
 gem 'sinatra-sequel'
