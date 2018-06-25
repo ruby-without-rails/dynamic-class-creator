@@ -16,7 +16,7 @@ services:
     environment:
       RACK_ENV: DEV
       RUBYLIB: ./lib
-      DATABASE_URL_LOCAL: postgres://postgres:postgres@localhost:5422/postgres
+      DATABASE_URL_LOCAL: postgres://postgres:postgres@localhost:5432/postgres
     build: .
     command: rackup config.ru -E $RACK_ENV
     ports:
