@@ -81,19 +81,19 @@ You shall see
    - GET <host>/api/tables/<table_name>
    
   3 Return a row in current table
-   - GET <host>/api/tables/<table_name>/<id>
+   - GET <host>/api/tables/<table_name>/<id_>
    
   4 Return a list of current table in pagination mode
-   - GET <host>/api/tables/<table_name>/<page>/<limit> 
+   - GET <host>/api/tables/<table_name>/<page_>/<limit_> 
    
   5 Delete a row in current table
-   - DELETE <host>/api/tables/<table_name>/<id>
+   - DELETE <host>/api/tables/<table_name>/<id_>
    
   6 Persist values in current table
    - POST <host>/api/tables/<table_name>
    
   7 Update values in current table
-   - PUT <host>/api/tables/<table_name>/<id>   
+   - PUT <host>/api/tables/<table_name>/<id_>   
            
   8 Show possible columns in a current table
    - GET <host>/columns/<table_name>         
