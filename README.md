@@ -77,23 +77,37 @@ You shall see
   1 Show tables
    - GET <host>/api/tables
    
-  2 Return rows for table
+  2 Return all rows for table
    - GET <host>/api/tables/<table_name>
    
-  3 Return a row in current table
+  3 Return a row in current table by id
    - GET <host>/api/tables/<table_name>/<id_>
    
   4 Return a list of current table in pagination mode
    - GET <host>/api/tables/<table_name>/<page_>/<limit_> 
    
-  5 Delete a row in current table
+  5 Delete a row in current table by id
    - DELETE <host>/api/tables/<table_name>/<id_>
    
   6 Persist values in current table
    - POST <host>/api/tables/<table_name>
    
+```
+-- sample payload
+{
+ "name": "jose",
+ "category_id": 1
+}
+```
   7 Update values in current table
    - PUT <host>/api/tables/<table_name>/<id_>   
+   
+```
+-- sample payload
+{
+"name": "jose 2"        
+}
+```
            
   8 Show possible columns in a current table
    - GET <host>/columns/<table_name>         
