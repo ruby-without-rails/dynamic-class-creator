@@ -1,8 +1,11 @@
 require 'rbconfig'
+require 'singleton'
 
 module Utils
   # Module DiscoverOS
-  module DiscoverOS
+  class DiscoverOS
+    include Singleton
+
     class << self
       def os?
         case os_string

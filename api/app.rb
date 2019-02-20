@@ -23,7 +23,7 @@ class App < Sinatra::Application
   require 'requires'
   require 'aliases'
 
-  %w[controllers].each {|folder| Dir["#{Dir.pwd}/lib/#{folder}/*.rb"].each { |file| require file}}
+  %w[controllers].each {|folder| Dir["#{Dir.pwd}/lib/#{folder}/*.rb"].each(&method(:require)) }
 
   Controllers.constants.each{|ctrl_sym|
     module_name = Kernel.const_get('Controllers::?'.gsub('?', ctrl_sym.to_s))

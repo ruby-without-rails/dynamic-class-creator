@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'yaml'
 require 'sequel'
+require 'logger'
 require 'sequel/adapters/postgresql'
 require_relative '../utils/discover_os'
 
@@ -21,7 +22,6 @@ module Models
     yaml = load_config_file
 
     unless Utils::DiscoverOS.os?.eql?(:windows)
-      connection = Sequel.postgres(yaml)
       if Sequel::Postgres.supports_streaming?
         # If streaming is supported, you can load the streaming support into the database:
         connection.extension(:pg_streaming)
@@ -29,7 +29,13 @@ module Models
         connection.stream_all_queries = true
         puts '[Startup Info] - Postgresql streaming was activated.'
       end
-      connection
     end
+
+    connection = Sequel.postgres(yaml)
+
+    # Append log
+    connection.loggers << Logger.new($stdout)
+
+    connection
   end
 end
