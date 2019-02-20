@@ -1,5 +1,5 @@
 host: localhost
 user: postgres
 password: postgres
-database: paywithruby
+database: postgres
 port: 5432
