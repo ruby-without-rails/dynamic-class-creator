@@ -5,7 +5,6 @@
 require_relative 'lib/utils/discover_os'
 
 source 'http://rubygems.org'
-ruby '2.4.5'
 gem 'bundler'
 
 gem 'pg'
