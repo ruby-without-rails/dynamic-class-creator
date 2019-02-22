@@ -21,6 +21,8 @@ module Models
   def load_db
     yaml = load_config_file
 
+    connection = Sequel.postgres(yaml)
+
     unless Utils::DiscoverOS.os?.eql?(:windows)
       if Sequel::Postgres.supports_streaming?
         # If streaming is supported, you can load the streaming support into the database:
@@ -30,8 +32,6 @@ module Models
         puts '[Startup Info] - Postgresql streaming was activated.'
       end
     end
-
-    connection = Sequel.postgres(yaml)
 
     # Append log
     connection.loggers << Logger.new($stdout)
